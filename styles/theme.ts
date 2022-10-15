@@ -95,6 +95,9 @@ export const theme = extendTheme({
   config,
   components: {
     Text: {
+      baseStyle: {
+        textAlign: 'center',
+      },
       variants: {
         date: {
           color: 'green.600',

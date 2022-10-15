@@ -1,9 +1,17 @@
+import { AddIcon, MinusIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
   Center,
   Heading,
   HStack,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
   Spacer,
   Text,
   useBoolean,
@@ -26,28 +34,33 @@ type Props = {
   name: string[]
   isFamily: boolean
   state: States
+  amount: number
 }
 
 const db: Record<string, Props> = {
   inmaculadajoseramon: {
     name: ['Inmaculada', 'Jose Ramón'],
-    isFamily: true,
+    isFamily: false,
     state: States.pending,
+    amount: 2,
   },
   maticristobal: {
     name: ['Mati', 'Cristobal'],
     isFamily: false,
     state: States.pending,
+    amount: 2,
   },
   lidiadiego: {
     name: ['Lidia', 'Diego'],
     isFamily: true,
     state: States.pending,
+    amount: 3,
   },
   mostri: {
     name: ['Diego Minolas'],
     isFamily: false,
     state: States.pending,
+    amount: 1,
   },
 }
 
@@ -90,11 +103,18 @@ const FamilyCover = ({ name }: { name: string[] }) => {
   )
 }
 
-const Home: NextPage<Props> = ({ name, isFamily, state: serverState }) => {
+const Home: NextPage<Props> = ({
+  name,
+  isFamily,
+  state: serverState,
+  amount,
+}) => {
   const [isFlipped, flipped] = useBoolean(false)
+  const [isModalOpen, modalOpen] = useBoolean(false)
   const isSingle = !isFamily && name.length === 1
   const isCouple = !isSingle && !isFamily
   const [state, setState] = useState(serverState)
+  const [counter, setCounter] = useState(amount)
 
   return (
     <Box bg="green.100">
@@ -148,7 +168,7 @@ const Home: NextPage<Props> = ({ name, isFamily, state: serverState }) => {
             </HStack>
             <Text color="orange.500">A las 12:00</Text>
 
-            <Text color="yellow.500">Que tendra lugar en:</Text>
+            <Text color="yellow.500">Que tendrá lugar en:</Text>
             <Text
               variant="date"
               as="a"
@@ -170,7 +190,13 @@ const Home: NextPage<Props> = ({ name, isFamily, state: serverState }) => {
                   <Button
                     fontSize={24}
                     colorScheme="green"
-                    onClick={() => setState(States.accepted)}
+                    onClick={() => {
+                      if (isSingle) {
+                        setState(States.accepted)
+                      } else {
+                        modalOpen.on()
+                      }
+                    }}
                   >
                     Sí
                   </Button>
@@ -217,7 +243,7 @@ const Home: NextPage<Props> = ({ name, isFamily, state: serverState }) => {
                   <Button
                     fontSize={18}
                     colorScheme="green"
-                    onClick={() => setState(States.accepted)}
+                    onClick={() => modalOpen.on}
                   >
                     {isSingle
                       ? '¡He cambiado de opinión, me apunto!'
@@ -230,6 +256,53 @@ const Home: NextPage<Props> = ({ name, isFamily, state: serverState }) => {
           </VStack>
         </Card>
       </Center>
+
+      <Modal isCentered isOpen={isModalOpen} onClose={modalOpen.off}>
+        <ModalOverlay />
+        <ModalContent mx={2}>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text fontSize={22} py={6}>
+              ¿Cuantas personas asistireis?
+            </Text>
+            <Center>
+              <IconButton
+                size="lg"
+                shadow="none"
+                bg="none"
+                aria-label="menos"
+                icon={<MinusIcon />}
+                disabled={counter === 1}
+                onClick={() => setCounter((v) => v - 1)}
+              />
+              <Text fontSize={50} px={8} color="pink.300" fontFamily="heading">
+                {counter}
+              </Text>
+              <IconButton
+                size="lg"
+                shadow="none"
+                bg="none"
+                aria-label="menos"
+                icon={<AddIcon />}
+                disabled={counter === amount}
+                onClick={() => setCounter((v) => v + 1)}
+              />
+            </Center>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="green"
+              onClick={() => {
+                setState(States.accepted)
+                modalOpen.off()
+              }}
+            >
+              Confirmar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   )
 }
