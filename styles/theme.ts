@@ -1,4 +1,4 @@
-import { extendTheme } from '@chakra-ui/react'
+import { extendTheme, ThemeConfig } from '@chakra-ui/react'
 
 export const colors = {
   gray: {
@@ -75,4 +75,57 @@ export const colors = {
   },
 }
 
-export const theme = extendTheme({ colors })
+const config: ThemeConfig = {
+  initialColorMode: 'light',
+  useSystemColorMode: false,
+}
+
+export const theme = extendTheme({
+  global: {
+    'html, body': {
+      fontFamily: 'Josefin Slab',
+    },
+  },
+  colors,
+  fonts: {
+    heading: 'Fidra',
+    script: `'Mrs Saint Delafield', script`,
+    body: `'Josefin Slab', serif`,
+  },
+  config,
+  components: {
+    Text: {
+      variants: {
+        date: {
+          color: 'green.600',
+          fontFamily: 'heading',
+
+          border: '2px solid',
+          borderColor: 'orange.200',
+          borderLeft: 'none',
+          borderRight: 'none',
+          pt: '0.2rem',
+          lineHeight: 2,
+        },
+      },
+    },
+    Button: {
+      baseStyle: {
+        shadow: 'base',
+        lineHeight: 1,
+        pt: '0.4rem',
+        minW: '4rem',
+        colorScheme: 'green',
+      },
+    },
+    Heading: {
+      baseStyle: {
+        maxW: '90%',
+        color: 'green.600',
+        fontFamily: 'script',
+        fontSize: '4vh !important',
+        textAlign: 'center',
+      },
+    },
+  },
+})

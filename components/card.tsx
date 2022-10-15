@@ -6,18 +6,25 @@ type Props = {
   bg: StaticImageData
   children: React.ReactNode
   rotation: number
-  onClick: () => void
+  onClick?: () => void
+  width?: string
 }
 
-export const Card = ({ rotation, onClick, bg, children }: Props) => {
+export const Card = ({
+  rotation,
+  onClick,
+  bg,
+  children,
+  width = '100%',
+}: Props) => {
   return (
     <Center
-      cursor={'pointer'}
+      cursor={onClick ? 'pointer' : 'unset'}
       onClick={onClick}
       position="absolute"
       shadow="lg"
-      w="100%"
-      maxW={'90vw'}
+      h="90vh"
+      maxW="90vw"
       transition="1s"
       sx={{
         aspectRatio: `${bg.width} / ${bg.height}`,
