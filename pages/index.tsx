@@ -2,6 +2,7 @@ import { Box, Center, Heading, useBoolean } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import bg from 'public/bg.png'
+import { Card } from '../components/card'
 
 const Home: NextPage = () => {
   const [isFlipped, flipped] = useBoolean(false)
@@ -14,42 +15,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Center h="100vh" sx={{ perspective: '1600px' }}>
-        <Center
-          onClick={flipped.toggle}
-          position="absolute"
-          shadow="lg"
-          w="100%"
-          maxW={'90vw'}
-          transition="1s"
-          sx={{
-            aspectRatio: '2000 / 1335',
-            transformStyle: 'preserve-3d',
-            transform: isFlipped ? 'rotateY(0deg)' : 'rotateY(180deg)',
-            backfaceVisibility: 'hidden',
-          }}
-          bgImage={bg.src}
-          bgSize="cover"
-        >
+        <Card bg={bg} onClick={flipped.toggle} rotation={isFlipped ? 180 : 360}>
           <Heading color="red.700">Delante</Heading>
-        </Center>
-        <Center
-          onClick={flipped.toggle}
-          position="absolute"
-          shadow="lg"
-          w="100%"
-          transition="1s"
-          maxW={'90vw'}
-          sx={{
-            aspectRatio: '2000 / 1335',
-            transformStyle: 'preserve-3d',
-            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(360deg)',
-            backfaceVisibility: 'hidden',
-          }}
-          bgImage={bg.src}
-          bgSize="cover"
-        >
+        </Card>
+        <Card bg={bg} onClick={flipped.toggle} rotation={isFlipped ? 0 : 180}>
           <Heading color="red.700">Detras</Heading>
-        </Center>
+        </Card>
       </Center>
     </Box>
   )
