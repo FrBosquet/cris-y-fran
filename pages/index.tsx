@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Center, Heading, Text, VStack } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 
 enum States {
@@ -9,10 +9,15 @@ enum States {
 
 const Home: NextPage = () => {
   return (
-    <Box bg="green.100">
-      No tenemos a esa persona en la lista de invitados. Podrias revisar tu
-      enalce
-    </Box>
+    <Center h="100vh" bg="green.100">
+      <VStack>
+        <Heading fontSize={112}>¡Oopsie!</Heading>
+        <Text>
+          No te hemos encontrado entre la lista de invitados. ¿Podrias revisar
+          tu enlace?
+        </Text>
+      </VStack>
+    </Center>
   )
 }
 

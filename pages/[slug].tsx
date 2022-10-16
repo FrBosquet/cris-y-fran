@@ -19,10 +19,11 @@ import {
 } from '@chakra-ui/react'
 import type { NextPage, NextPageContext } from 'next'
 import Head from 'next/head'
-import bg from 'public/bg.png'
 import bgi from 'public/bgi.png'
 import { useState } from 'react'
-import { Card } from '../components/card'
+import { Card } from '../components/Card'
+import { Frontface } from '../components/Frontface'
+import { Guest } from '../types'
 
 enum States {
   pending,
@@ -31,13 +32,10 @@ enum States {
 }
 
 type Props = {
-  name: string[]
-  isFamily: boolean
-  state: States
-  amount: number
+  guest: Guest
 }
 
-const db: Record<string, Props> = {
+const db: Record<string, Guest> = {
   inmaculadajoseramon: {
     name: ['Inmaculada', 'Jose Ramón'],
     isFamily: false,
@@ -64,57 +62,15 @@ const db: Record<string, Props> = {
   },
 }
 
-const SingleCover = ({ name }: { name: string[] }) => {
-  return (
-    <VStack w="100%" pb={'10vh'}>
-      <Heading lineHeight={1} fontSize={'8vh'}>
-        {name[0]}
-      </Heading>
-    </VStack>
-  )
-}
-const CoupleCover = ({ name }: { name: string[] }) => {
-  return (
-    <VStack w="100%" pb={'10vh'}>
-      <Heading lineHeight={1} fontSize={'6vh'}>
-        {name[0]}
-      </Heading>
-      <Heading lineHeight={1} fontSize={'4vh'} color="orange.500">
-        +
-      </Heading>
-      <Heading lineHeight={1} fontSize={'6vh'}>
-        {name[1]}
-      </Heading>
-    </VStack>
-  )
-}
-const FamilyCover = ({ name }: { name: string[] }) => {
-  const fullName = `${name[0]} y ${name[1]}`
+const Home: NextPage<Props> = ({ guest }) => {
+  const { name, isFamily } = guest
 
-  return (
-    <VStack w="100%" pb={'10vh'}>
-      <Heading lineHeight={1} fontSize={'3vh'} color="pink.300">
-        Familia de
-      </Heading>
-      <Heading lineHeight={1} fontSize={'6vh'}>
-        {fullName}
-      </Heading>
-    </VStack>
-  )
-}
-
-const Home: NextPage<Props> = ({
-  name,
-  isFamily,
-  state: serverState,
-  amount,
-}) => {
   const [isFlipped, flipped] = useBoolean(false)
   const [isModalOpen, modalOpen] = useBoolean(false)
   const isSingle = !isFamily && name.length === 1
-  const isCouple = !isSingle && !isFamily
-  const [state, setState] = useState(serverState)
-  const [counter, setCounter] = useState(amount)
+
+  const [state, setState] = useState(guest.state)
+  const [counter, setCounter] = useState(guest.amount)
 
   return (
     <Box bg="green.100">
@@ -124,16 +80,7 @@ const Home: NextPage<Props> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Center h="100vh" sx={{ perspective: '1600px' }}>
-        <Card
-          bg={bg}
-          onClick={flipped.toggle}
-          rotation={isFlipped ? 180 : 360}
-          width="80%"
-        >
-          {isSingle && <SingleCover name={name} />}
-          {isFamily && <FamilyCover name={name} />}
-          {isCouple && <CoupleCover name={name} />}
-        </Card>
+        <Frontface guest={guest} isFlipped={isFlipped} onClick={flipped.on} />
         <Card bg={bgi} rotation={isFlipped ? 0 : 180}>
           <VStack
             // style={{ backdropFilter: 'saturate(0.5) blur(5px)' }}
@@ -284,7 +231,7 @@ const Home: NextPage<Props> = ({
                 bg="none"
                 aria-label="menos"
                 icon={<AddIcon />}
-                disabled={counter === amount}
+                disabled={counter === guest.amount}
                 onClick={() => setCounter((v) => v + 1)}
               />
             </Center>
@@ -322,7 +269,9 @@ export async function getServerSideProps(context: NextPageContext) {
   }
 
   return {
-    props: record,
+    props: {
+      guest: record,
+    },
   }
 }
 
