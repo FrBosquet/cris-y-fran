@@ -18,65 +18,50 @@ import Head from 'next/head'
 import { useState } from 'react'
 import { Backface } from '../components/Backface'
 import { Frontface } from '../components/Frontface'
-import { Guest } from '../types'
-
-enum States {
-  pending,
-  accepted,
-  declined,
-}
+import { getFromSlug, updateGuest } from '../lib/supabase'
+import { Guest, States } from '../types'
 
 type Props = {
   guest: Guest
 }
 
-const db: Record<string, Guest> = {
-  inmaculadajoseramon: {
-    name: ['Inmaculada', 'Jose Ramón'],
-    isFamily: false,
-    state: States.pending,
-    amount: 2,
-  },
-  maticristobal: {
-    name: ['Mati', 'Cristobal'],
-    isFamily: false,
-    state: States.pending,
-    amount: 2,
-  },
-  lidiadiego: {
-    name: ['Lidia', 'Diego'],
-    isFamily: true,
-    state: States.pending,
-    amount: 3,
-  },
-  mostri: {
-    name: ['Diego Minolas'],
-    isFamily: false,
-    state: States.pending,
-    amount: 1,
-  },
-}
-
 const Home: NextPage<Props> = ({ guest }) => {
   const { name, isFamily } = guest
 
+  const [isLoading, loading] = useBoolean(false)
   const [isFlipped, flipped] = useBoolean(false)
   const [isModalOpen, modalOpen] = useBoolean(false)
   const isSingle = !isFamily && name.length === 1
 
-  const [state, setState] = useState(guest.state)
-  const [counter, setCounter] = useState(guest.amount)
+  const [localGuest, setLocalGuest] = useState(guest)
+  const [counter, setCounter] = useState(guest.maxAmount)
 
-  const handleClickYes = () => {
-    if (isSingle) {
-      setState(States.accepted)
+  const handleClickYes = async () => {
+    loading.on()
+
+    if (isSingle || isModalOpen) {
+      const updatedGuest = await updateGuest(guest.id, {
+        state: States.accepted,
+        amount: counter,
+      })
+      setLocalGuest(updatedGuest)
+
+      modalOpen.off()
     } else {
       modalOpen.on()
     }
+
+    loading.off()
   }
 
-  const handleClickNo = () => {
-    setState(States.declined)
+  const handleClickNo = async () => {
+    loading.on()
+    const updatedGuest = await updateGuest(guest.id, {
+      state: States.declined,
+      amount: counter,
+    })
+    setLocalGuest(updatedGuest)
+    loading.off()
   }
 
   return (
@@ -87,9 +72,14 @@ const Home: NextPage<Props> = ({ guest }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Center h="100vh" sx={{ perspective: '1600px' }}>
-        <Frontface guest={guest} isFlipped={isFlipped} onClick={flipped.on} />
+        <Frontface
+          guest={localGuest}
+          isFlipped={isFlipped}
+          onClick={flipped.on}
+        />
         <Backface
-          guest={guest}
+          isLoading={isLoading}
+          guest={localGuest}
           isFlipped={isFlipped}
           onClickNo={handleClickNo}
           onClickYes={handleClickYes}
@@ -123,7 +113,7 @@ const Home: NextPage<Props> = ({ guest }) => {
                 bg="none"
                 aria-label="menos"
                 icon={<AddIcon />}
-                disabled={counter === guest.amount}
+                disabled={counter === guest.maxAmount}
                 onClick={() => setCounter((v) => v + 1)}
               />
             </Center>
@@ -132,10 +122,8 @@ const Home: NextPage<Props> = ({ guest }) => {
           <ModalFooter>
             <Button
               colorScheme="green"
-              onClick={() => {
-                setState(States.accepted)
-                modalOpen.off()
-              }}
+              isLoading={isLoading}
+              onClick={handleClickYes}
             >
               Confirmar
             </Button>
@@ -149,9 +137,9 @@ const Home: NextPage<Props> = ({ guest }) => {
 export async function getServerSideProps(context: NextPageContext) {
   // @ts-ignore
   const slug = context.params.slug
-  const record = db[slug]
+  const guest = await getFromSlug(slug)
 
-  if (!record) {
+  if (!guest) {
     return {
       redirect: {
         destination: '/',
@@ -162,7 +150,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
   return {
     props: {
-      guest: record,
+      guest,
     },
   }
 }

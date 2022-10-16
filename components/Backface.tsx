@@ -1,10 +1,19 @@
-import { Button, Heading, HStack, Spacer, Text, VStack } from '@chakra-ui/react'
+import {
+  Button,
+  Center,
+  Heading,
+  HStack,
+  Spacer,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import bgi from 'public/bgi.png'
 import { Card } from '../components/Card'
 import { getGuestTypes } from '../lib/guesttype'
 import { Guest, States } from '../types'
 
 type Props = {
+  isLoading: boolean
   guest: Guest
   isFlipped: boolean
   onClickYes: () => void
@@ -12,22 +21,18 @@ type Props = {
 }
 
 export const Backface = ({
+  isLoading,
   guest,
   isFlipped,
   onClickYes,
   onClickNo,
 }: Props) => {
-  const { isSingle, isFamily, isCouple } = getGuestTypes(guest)
+  const { isSingle } = getGuestTypes(guest)
   const { state } = guest
 
   return (
     <Card bg={bgi} rotation={isFlipped ? 0 : 180}>
-      <VStack
-        // style={{ backdropFilter: 'saturate(0.5) blur(5px)' }}
-        p={'2rem'}
-        borderRadius={'2rem'}
-        h="100%"
-      >
+      <VStack p={'2rem'} borderRadius={'2rem'} h="100%">
         <Spacer />
         <Heading color="orange.500" fontSize="4rem" fontFamily="script">
           Cris + Fran
@@ -68,60 +73,74 @@ export const Backface = ({
         </Text>
         <Spacer />
 
-        {state === States.pending && (
-          <>
-            <Text pt={4} color="yellow.500">
-              {isSingle ? '¿Contamos contigo?' : '¿Contamos con vosotros?'}
-            </Text>
-            <HStack spacing="1rem">
-              <Button fontSize={24} colorScheme="green" onClick={onClickYes}>
-                Sí
-              </Button>
-              <Button fontSize={24} colorScheme="orange" onClick={onClickNo}>
-                No
-              </Button>
-            </HStack>
-            <Spacer />
-          </>
-        )}
+        <Center flexDirection="column" h="25vh">
+          {state === States.pending && (
+            <>
+              <Text pt={4} color="yellow.500">
+                {isSingle ? '¿Contamos contigo?' : '¿Contamos con vosotros?'}
+              </Text>
+              <HStack spacing="1rem">
+                <Button
+                  fontSize={24}
+                  colorScheme="green"
+                  onClick={onClickYes}
+                  isLoading={isLoading}
+                >
+                  Sí
+                </Button>
+                <Button
+                  fontSize={24}
+                  colorScheme="orange"
+                  onClick={onClickNo}
+                  isLoading={isLoading}
+                >
+                  No
+                </Button>
+              </HStack>
+            </>
+          )}
 
-        {state === States.accepted && (
-          <>
-            <Text pt={8} color="green.500" fontSize={32}>
-              ¡Fantástico! Allí nos veremos
-            </Text>
-            <Text color="orange.500">
-              {isSingle
-                ? '¿Quieres echarnos una mano? Este es nuestro IBAN'
-                : '¿Queréis echarnos una mano? Este es nuestro IBAN'}
-            </Text>
-            <Text size="xs" variant="date">
-              ES5420958788194951189394
-            </Text>
-            <Spacer />
-          </>
-        )}
-
-        {state === States.declined && (
-          <>
-            <Text fontSize={32} pt={8} color="orange.500">
-              ¡Nos da mucha pena!
-            </Text>
-            <Text color="pink.500">
-              {isSingle
-                ? 'Si cambias de opinión, solo tienes que hacer click aquí'
-                : 'Si cambiais de opinión, solo teneis que hacer click aquí'}
-            </Text>
-            <HStack spacing="1rem">
-              <Button fontSize={18} colorScheme="green" onClick={onClickYes}>
+          {state === States.accepted && (
+            <>
+              <Text pt={8} color="green.500" fontSize={32}>
+                ¡Fantástico! Allí nos veremos
+              </Text>
+              <Text color="orange.500">
                 {isSingle
-                  ? '¡He cambiado de opinión, me apunto!'
-                  : '¡Hemos cambiado de opinión, nos apuntamos!'}
-              </Button>
-            </HStack>
-            <Spacer />
-          </>
-        )}
+                  ? '¿Quieres echarnos una mano? Este es nuestro IBAN'
+                  : '¿Queréis echarnos una mano? Este es nuestro IBAN'}
+              </Text>
+              <Text size="xs" variant="date">
+                ES5420958788194951189394
+              </Text>
+            </>
+          )}
+
+          {state === States.declined && (
+            <>
+              <Text fontSize={32} pt={8} color="orange.500">
+                ¡Nos da mucha pena!
+              </Text>
+              <Text color="pink.500">
+                {isSingle
+                  ? 'Si cambias de opinión, solo tienes que hacer click aquí'
+                  : 'Si cambiais de opinión, solo teneis que hacer click aquí'}
+              </Text>
+              <HStack spacing="1rem">
+                <Button
+                  fontSize={18}
+                  colorScheme="green"
+                  onClick={onClickYes}
+                  isLoading={isLoading}
+                >
+                  {isSingle
+                    ? '¡He cambiado de opinión, me apunto!'
+                    : '¡Hemos cambiado de opinión, nos apuntamos!'}
+                </Button>
+              </HStack>
+            </>
+          )}
+        </Center>
       </VStack>
     </Card>
   )

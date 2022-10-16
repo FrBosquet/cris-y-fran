@@ -16,9 +16,9 @@ export const getGuestTypes = (
 } => {
   const guestType = getGuestType(guest)
 
-  const isSingle = guestType === GuestType.single
-  const isFamily = guestType === GuestType.family
-  const isCouple = guestType === GuestType.couple
+  const isSingle = guestType == GuestType.single
+  const isFamily = guestType == GuestType.family
+  const isCouple = guestType == GuestType.couple
 
   return { isSingle, isFamily, isCouple }
 }
