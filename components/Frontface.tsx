@@ -1,8 +1,8 @@
 import { Heading, VStack } from '@chakra-ui/react'
 import bg from 'public/bg.png'
 import { Card } from '../components/Card'
-import { getGuestType } from '../lib/guesttype'
-import { Guest, GuestType } from '../types'
+import { getGuestTypes } from '../lib/guesttype'
+import { Guest } from '../types'
 
 type CoverProps = { guest: Guest }
 type Props = CoverProps & { isFlipped: boolean; onClick: () => void }
@@ -47,11 +47,7 @@ const FamilyCover = ({ guest: { name } }: CoverProps) => {
 }
 
 export const Frontface = ({ guest, isFlipped, onClick }: Props) => {
-  const guestType = getGuestType(guest)
-
-  const isSingle = guestType === GuestType.single
-  const isFamily = guestType === GuestType.family
-  const isCouple = guestType === GuestType.couple
+  const { isSingle, isFamily, isCouple } = getGuestTypes(guest)
 
   return (
     <Card
