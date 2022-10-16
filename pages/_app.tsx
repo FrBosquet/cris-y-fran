@@ -2,14 +2,22 @@ import { ChakraProvider } from '@chakra-ui/react'
 import '@fontsource/josefin-slab/700.css'
 import '@fontsource/mrs-saint-delafield/400.css'
 import type { AppProps } from 'next/app'
+import { useState } from 'react'
 import '../styles/globals.css'
 import { theme } from '../styles/theme'
 
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { SessionContextProvider } from '@supabase/auth-helpers-react'
+
 function MyApp({ Component, pageProps }: AppProps) {
+  const [supabaseClient] = useState(() => createBrowserSupabaseClient())
+
   return (
-    <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <SessionContextProvider supabaseClient={supabaseClient}>
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </SessionContextProvider>
   )
 }
 
