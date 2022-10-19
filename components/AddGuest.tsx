@@ -191,7 +191,7 @@ export const AddGuest: React.FC<Props> = () => {
           <ModalFooter>
             <Button
               variant="ghost"
-              onClick={formik.resetForm}
+              onClick={() => formik.resetForm()}
               isLoading={formik.isSubmitting}
             >
               Limpiar
