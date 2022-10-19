@@ -31,7 +31,7 @@ import { ChangeEvent } from 'react'
 type Props = {}
 
 const toNames = (raw: string): string[] => raw.split(',').map((s) => s.trim())
-const toSlug = (raw: string): string => toNames(raw).join('y').toLowerCase()
+const toSlug = (raw: string): string => toNames(raw).join('y').toLowerCase() // TODO: Remove accents
 const toAmount = (raw: string): number => raw.split(',').length
 
 export const AddGuest: React.FC<Props> = () => {
@@ -60,13 +60,12 @@ export const AddGuest: React.FC<Props> = () => {
 
         if (error) {
           if ((error.code = '23505')) {
+            // TODO: This error is not unique for duplicated slug
             formik.setFieldError('slug', 'Este enlace ya existe')
-            throw new Error(
-              'El enlace ya existe, utiliza uno distinto: ' + error.message
-            )
+            throw new Error('El enlace ya existe, utiliza uno distinto: ')
           }
 
-          throw new Error('Error creando la invitación: ' + error.message)
+          throw new Error('Error creando la invitación: ')
         }
 
         toast({
