@@ -1,4 +1,4 @@
-import { extendTheme, ThemeConfig } from '@chakra-ui/react';
+import { extendTheme, ThemeConfig } from '@chakra-ui/react'
 
 export const colors = {
   gray: {
@@ -74,12 +74,12 @@ export const colors = {
     '800': '#333D29',
     '900': '#191E15',
   },
-};
+}
 
 const config: ThemeConfig = {
   initialColorMode: 'light',
   useSystemColorMode: false,
-};
+}
 
 export const theme = extendTheme({
   global: {
@@ -111,6 +111,9 @@ export const theme = extendTheme({
           pt: '0.2rem',
           lineHeight: 2,
         },
+        monospace: {
+          fontFamily: 'monospace',
+        },
       },
     },
     Button: {
@@ -136,4 +139,4 @@ export const theme = extendTheme({
       },
     },
   },
-});
+})

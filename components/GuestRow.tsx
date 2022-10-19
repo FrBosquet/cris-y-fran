@@ -1,5 +1,16 @@
-import { Avatar, Center, HStack, Icon, Text, Tooltip } from '@chakra-ui/react'
 import {
+  Avatar,
+  Center,
+  HStack,
+  Icon,
+  IconButton,
+  Text,
+  Tooltip,
+  VStack,
+} from '@chakra-ui/react'
+import Link from 'next/link'
+import {
+  BsBack,
   BsCheckCircleFill,
   BsFillPeopleFill,
   BsFillPersonPlusFill,
@@ -44,8 +55,12 @@ const typeLabels = {
 }
 
 export const GuestRow: React.FC<Props> = ({ guest }) => {
-  const { state, amount } = guest
+  const { state, amount, slug } = guest
   const type = getGuestType(guest)
+
+  const copy = () => {
+    navigator.clipboard.writeText(`${window.location.host}/${slug}`)
+  }
 
   const visibleAmount =
     state === States.accepted ? amount : state === States.declined ? 0 : '...'
@@ -64,12 +79,35 @@ export const GuestRow: React.FC<Props> = ({ guest }) => {
       <Tooltip hasArrow label={guest.host.name}>
         <Avatar size="xs" name={guest.host.name} />
       </Tooltip>
-      <Text textAlign="start" flex={1}>
-        {guest.name.join(', ')}
-      </Text>
+      <VStack alignItems="start" flex={1} spacing={0}>
+        <Text noOfLines={1}>{guest.name.join(', ')}</Text>
+        <HStack>
+          <Link href={`/${slug}`} passHref>
+            <Text
+              flex={1}
+              fontSize="xs"
+              target="_blank"
+              variant="monospace"
+              as="a"
+              color="yellow.200"
+            >
+              /{slug}
+            </Text>
+          </Link>
+        </HStack>
+      </VStack>
       <Text>
         {visibleAmount}/{guest.maxAmount}
       </Text>
+      <Tooltip hasArrow label={'Copiar'}>
+        <IconButton
+          onClick={copy}
+          colorScheme="green"
+          aria-label="copiar"
+          size="xs"
+          icon={<BsBack />}
+        />
+      </Tooltip>
     </HStack>
   )
 }

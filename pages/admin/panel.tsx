@@ -89,7 +89,7 @@ const Home: NextPage<Props> = ({
             icon={<LockIcon />}
           />
         </Tooltip>
-        <Heading variant="panel">Panel de administracion</Heading>
+        <Heading variant="panel">Administrador</Heading>
 
         <Spacer />
         <Tooltip label="añadir">
@@ -136,7 +136,7 @@ const Home: NextPage<Props> = ({
           </Button>
         </Tooltip>
 
-        <Tooltip label="rechazados">
+        <Tooltip placement="bottom-start" label="rechazados">
           <Button
             variant={filter === States.declined ? 'outline' : 'solid'}
             onClick={() =>
@@ -168,10 +168,8 @@ const Home: NextPage<Props> = ({
 
 export const getServerSideProps = withPageAuth({
   redirectTo: '/admin',
-  getServerSideProps: async (context, client) => {
+  getServerSideProps: async () => {
     const { guests, count } = await getGuests(10)
-
-    console.log({ guests })
 
     return {
       props: {
