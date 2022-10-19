@@ -7,7 +7,7 @@ import {
   HStack,
   Input,
   useToast,
-  VStack,
+  VStack
 } from '@chakra-ui/react'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
@@ -53,7 +53,7 @@ const Home: NextPage = () => {
     const { values } = formik
 
     const response = await supabaseClient
-      .from('admin_inv')
+      .from('hosts')
       .select('email, redeemed')
       .match({ email: values.email })
       .limit(1)
@@ -80,7 +80,7 @@ const Home: NextPage = () => {
     try {
       await supabaseClient.auth.signUp(values)
       await supabaseClient
-        .from('admin_inv')
+        .from('hosts')
         .update({ redeemed: true })
         .match({ email: values.email })
       toast({
