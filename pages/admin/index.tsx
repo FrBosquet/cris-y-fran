@@ -7,7 +7,7 @@ import {
   HStack,
   Input,
   useToast,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
@@ -29,6 +29,20 @@ const Home: NextPage = () => {
     },
     onSubmit: async (values) => {
       try {
+        const { data } = await supabaseClient
+          .from('hosts')
+          .select('id')
+          .match({ email: values.email })
+          .limit(1)
+          .single()
+
+        if (!data)
+          throw new Error('Anfitrion no encontrado. Contacta al administrador')
+
+        const { id } = data
+
+        sessionStorage.setItem('host_id', id)
+
         const { error } = await supabaseClient.auth.signInWithPassword(
           formik.values
         )

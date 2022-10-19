@@ -15,7 +15,7 @@ import { useSessionContext } from '@supabase/auth-helpers-react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
-import { BsFillPersonPlusFill } from 'react-icons/bs'
+import { AddGuest } from '../../components/AddGuest'
 import { GuestRow } from '../../components/GuestRow'
 import { getGuests } from '../../lib/supabase'
 import { Guest, States } from '../../types'
@@ -24,20 +24,6 @@ type Props = {
   guests: Guest[]
   count: number
 }
-
-const fakeGuests: Guest[] = Array(124)
-  .fill(null)
-  .map((_, id) => ({
-    id,
-    name: ['Peter', 'Patri'],
-    isFamily: true,
-    state: States.pending,
-    amount: 3,
-    maxAmount: 3,
-    host: {
-      name: 'Fran Bosquet',
-    },
-  }))
 
 const count = (prop: keyof Guest) => (acc: number, guest: Guest) =>
   acc + Number(guest[prop])
@@ -56,6 +42,7 @@ const Home: NextPage<Props> = ({
 
   const logout = useCallback(async () => {
     await supabaseClient.auth.signOut()
+    sessionStorage.removeItem('host_id')
     replace('/admin')
   }, [])
 
@@ -68,8 +55,6 @@ const Home: NextPage<Props> = ({
   const declined = guests
     .filter(({ state }) => state === States.declined)
     .reduce(count('maxAmount'), 0)
-
-  console.log({ guests })
 
   const filteredList = useMemo(() => {
     if (filter === null) return guests
@@ -92,15 +77,8 @@ const Home: NextPage<Props> = ({
         <Heading variant="panel">Administrador</Heading>
 
         <Spacer />
-        <Tooltip label="añadir">
-          <IconButton
-            size="sm"
-            aria-label="añadir"
-            colorScheme="blue"
-            onClick={logout}
-            icon={<BsFillPersonPlusFill />}
-          />
-        </Tooltip>
+
+        <AddGuest />
       </HStack>
 
       <HStack p={2} bg="gray.800" shadow="base" w="100%" borderRadius="md">
