@@ -61,10 +61,12 @@ export const AddGuest: React.FC<Props> = () => {
         if (error) {
           if ((error.code = '23505')) {
             formik.setFieldError('slug', 'Este enlace ya existe')
-            throw new Error('El enlace ya existe, utiliza uno distinto')
+            throw new Error(
+              'El enlace ya existe, utiliza uno distinto: ' + error.message
+            )
           }
 
-          throw new Error('Error creando la invitación')
+          throw new Error('Error creando la invitación: ' + error.message)
         }
 
         toast({
