@@ -134,7 +134,11 @@ const Home: NextPage = () => {
             >
               Registrar
             </Button>
-            <Button type="submit" isLoading={isLoading || formik.isSubmitting}>
+            <Button
+              type="submit"
+              isLoading={isLoading || formik.isSubmitting}
+              colorScheme="green"
+            >
               Entrar
             </Button>
           </HStack>
