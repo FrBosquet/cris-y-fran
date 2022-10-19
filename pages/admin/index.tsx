@@ -90,13 +90,14 @@ const Home: NextPage = () => {
   return (
     <Center minH="100vh" bg="green.800" color="white">
       <VStack>
-        <Heading>Acceso novios</Heading>
+        <Heading variant="panel">Acceso novios</Heading>
         <VStack
           as="form"
           bg="pink.50"
           color="black"
           p={4}
           onSubmit={formik.handleSubmit as any}
+          borderRadius="lg"
         >
           <FormControl>
             <FormLabel>Email</FormLabel>

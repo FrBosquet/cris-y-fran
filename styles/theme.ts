@@ -116,7 +116,6 @@ export const theme = extendTheme({
       baseStyle: {
         shadow: 'base',
         lineHeight: 1,
-        pt: '0.4rem',
         minW: '4rem',
         colorScheme: 'green',
       },
@@ -128,6 +127,11 @@ export const theme = extendTheme({
         fontFamily: 'script',
         fontSize: '4vh !important',
         textAlign: 'center',
+      },
+      variants: {
+        panel: {
+          fontFamily: 'body',
+        },
       },
     },
   },
