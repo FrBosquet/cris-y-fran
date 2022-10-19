@@ -28,49 +28,15 @@ const Home: NextPage = () => {
       password: '',
     },
     onSubmit: async (values) => {
-      toast({
-        title: 'Registrando cuenta...',
-        status: 'info',
-      })
-
-      const response = await supabaseClient
-        .from('admin_inv')
-        .select('email, redeemed')
-        .match({ email: values.email })
-        .limit(1)
-        .single()
-
-      if (response.error) {
-        toast({
-          title: 'Error conectando a la base de datos',
-          status: 'error',
-        })
-        return
-      }
-
-      const { data } = response
-
-      if (data.redeemed) {
-        toast({
-          title: 'Este usuario ya ha sido registrado',
-          status: 'error',
-        })
-        return
-      }
-
       try {
-        await supabaseClient.auth.signUp(values)
-        await supabaseClient
-          .from('admin_inv')
-          .update({ redeemed: true })
-          .match({ email: values.email })
+        const { error } = await supabaseClient.auth.signInWithPassword(
+          formik.values
+        )
+
+        if (error) throw new Error('Email o password incorrecto')
+      } catch (e: any) {
         toast({
-          title: 'Usuario registrado!',
-          status: 'success',
-        })
-      } catch (e) {
-        toast({
-          title: 'Error realizando el registro',
+          title: e.message,
           status: 'error',
         })
       }
@@ -83,12 +49,54 @@ const Home: NextPage = () => {
     }
   }, [isLoading, session])
 
-  const login = useCallback(() => {
-    supabaseClient.auth.signInWithPassword(formik.values)
+  const signup = useCallback(async () => {
+    const { values } = formik
+
+    const response = await supabaseClient
+      .from('admin_inv')
+      .select('email, redeemed')
+      .match({ email: values.email })
+      .limit(1)
+      .single()
+
+    if (response.error) {
+      toast({
+        title: 'Error conectando a la base de datos',
+        status: 'error',
+      })
+      return
+    }
+
+    const { data } = response
+
+    if (data.redeemed) {
+      toast({
+        title: 'Este usuario ya ha sido registrado',
+        status: 'error',
+      })
+      return
+    }
+
+    try {
+      await supabaseClient.auth.signUp(values)
+      await supabaseClient
+        .from('admin_inv')
+        .update({ redeemed: true })
+        .match({ email: values.email })
+      toast({
+        title: 'Usuario registrado!',
+        status: 'success',
+      })
+    } catch (e) {
+      toast({
+        title: 'Error realizando el registro',
+        status: 'error',
+      })
+    }
   }, [formik.values])
 
   return (
-    <Center minH="100vh" bg="green.800" color="white">
+    <Center minH="100vh" bg="gray.1000" color="white">
       <VStack>
         <Heading variant="panel">Acceso novios</Heading>
         <VStack
@@ -120,13 +128,13 @@ const Home: NextPage = () => {
             />
           </FormControl>
           <HStack>
-            <Button isLoading={isLoading || formik.isSubmitting} type="submit">
+            <Button
+              isLoading={isLoading || formik.isSubmitting}
+              onClick={signup}
+            >
               Registrar
             </Button>
-            <Button
-              onClick={login}
-              isLoading={isLoading || formik.isSubmitting}
-            >
+            <Button type="submit" isLoading={isLoading || formik.isSubmitting}>
               Entrar
             </Button>
           </HStack>
