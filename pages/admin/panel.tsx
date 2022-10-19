@@ -34,6 +34,9 @@ const fakeGuests: Guest[] = Array(124)
     state: States.pending,
     amount: 3,
     maxAmount: 3,
+    host: {
+      name: 'Fran Bosquet',
+    },
   }))
 
 const count = (prop: keyof Guest) => (acc: number, guest: Guest) =>
@@ -66,6 +69,8 @@ const Home: NextPage<Props> = ({
     .filter(({ state }) => state === States.declined)
     .reduce(count('maxAmount'), 0)
 
+  console.log({ guests })
+
   const filteredList = useMemo(() => {
     if (filter === null) return guests
 
@@ -84,7 +89,7 @@ const Home: NextPage<Props> = ({
             icon={<LockIcon />}
           />
         </Tooltip>
-        <Heading variant="panel">Panel de control</Heading>
+        <Heading variant="panel">Panel de administracion</Heading>
 
         <Spacer />
         <Tooltip label="añadir">

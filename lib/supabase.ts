@@ -41,7 +41,10 @@ export const getGuests = async (
 ): Promise<{ guests: Guest[]; count: number }> => {
   const { data, count, error } = await client
     .from('guests')
-    .select('*', { count: 'exact' })
+    .select(`
+      *,
+      host (name)
+    `, { count: 'exact' })
     .limit(amount)
 
   console.log({ data, count, error })

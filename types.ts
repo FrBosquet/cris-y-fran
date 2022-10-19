@@ -11,6 +11,9 @@ export type Guest = {
   state: States
   amount: number
   maxAmount: number
+  host: {
+    name: string
+  }
 }
 
 export enum GuestType {
