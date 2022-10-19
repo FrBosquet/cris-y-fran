@@ -1,4 +1,4 @@
-import { LockIcon } from '@chakra-ui/icons';
+import { LockIcon } from '@chakra-ui/icons'
 import {
   Button,
   Heading,
@@ -9,42 +9,71 @@ import {
   Tooltip,
   useToast,
   VStack,
-} from '@chakra-ui/react';
-import { withPageAuth } from '@supabase/auth-helpers-nextjs';
-import { useSessionContext } from '@supabase/auth-helpers-react';
-import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
-import {
-  BsArrowBarLeft,
-  BsArrowBarRight,
-  BsFillPersonPlusFill,
-} from 'react-icons/bs';
-import { GuestRow } from '../../components/GuestRow';
-import { getGuests } from '../../lib/supabase';
-import { Guest } from '../../types';
+} from '@chakra-ui/react'
+import { withPageAuth } from '@supabase/auth-helpers-nextjs'
+import { useSessionContext } from '@supabase/auth-helpers-react'
+import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { useCallback, useMemo, useState } from 'react'
+import { BsFillPersonPlusFill } from 'react-icons/bs'
+import { GuestRow } from '../../components/GuestRow'
+import { getGuests } from '../../lib/supabase'
+import { Guest, States } from '../../types'
 
 type Props = {
-  guests: Guest[];
-};
+  guests: Guest[]
+  count: number
+}
 
-const Home: NextPage<Props> = ({ guests: serverGuests }) => {
-  const [guests, setGuests] = useState(serverGuests);
-  const { replace } = useRouter();
-  const { supabaseClient, isLoading, session } = useSessionContext();
+const fakeGuests: Guest[] = Array(124)
+  .fill(null)
+  .map((_, id) => ({
+    id,
+    name: ['Peter', 'Patri'],
+    isFamily: true,
+    state: States.pending,
+    amount: 3,
+    maxAmount: 3,
+  }))
+
+const count = (prop: keyof Guest) => (acc: number, guest: Guest) =>
+  acc + Number(guest[prop])
+
+const Home: NextPage<Props> = ({
+  guests: serverGuests,
+  count: serverCount,
+}) => {
+  const [guests, setGuests] = useState(serverGuests)
+  const [filter, setFilter] = useState<null | States>(null)
+  const { replace } = useRouter()
+  const { supabaseClient } = useSessionContext()
   const toast = useToast({
     position: 'bottom-right',
-  });
+  })
 
   const logout = useCallback(async () => {
-    await supabaseClient.auth.signOut();
-    replace('/admin');
-  }, []);
+    await supabaseClient.auth.signOut()
+    replace('/admin')
+  }, [])
 
-  console.log({ guests });
+  const invited = guests
+    .filter(({ state }) => state === States.pending)
+    .reduce(count('maxAmount'), 0)
+  const accepted = guests
+    .filter(({ state }) => state === States.accepted)
+    .reduce(count('amount'), 0)
+  const declined = guests
+    .filter(({ state }) => state === States.declined)
+    .reduce(count('maxAmount'), 0)
+
+  const filteredList = useMemo(() => {
+    if (filter === null) return guests
+
+    return guests.filter(({ state }) => state === filter)
+  }, [guests, filter])
 
   return (
-    <VStack minH="100vh" bg="gray.1000" color="white" p={4} spacing={3}>
+    <VStack h="100vh" bg="gray.1000" color="white" p={4} spacing={3}>
       <HStack p={4} bg="gray.900" shadow="base" w="100%" borderRadius="md">
         <Tooltip label="salir">
           <IconButton
@@ -70,44 +99,48 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
       </HStack>
 
       <HStack p={2} bg="gray.800" shadow="base" w="100%" borderRadius="md">
-        <Tooltip label="pagina anterior">
-          <IconButton
-            size="xs"
-            aria-label="pagina anterior"
-            colorScheme="blue"
-            onClick={logout}
-            icon={<BsArrowBarLeft />}
-          />
-        </Tooltip>
-        <Text>1/10</Text>
-        <Tooltip label="pagina siguiente">
-          <IconButton
-            size="xs"
-            aria-label="pagina siguiente"
-            colorScheme="blue"
-            onClick={logout}
-            icon={<BsArrowBarRight />}
-          />
-        </Tooltip>
-
+        <Text fontSize="xs">{guests.length} invitaciones /</Text>
+        <Text fontSize="xs">
+          {guests.reduce((acc, guest) => acc + guest.maxAmount, 0)} invitados
+        </Text>
         <Spacer />
 
-        <Text>100 invitados</Text>
         <Tooltip label="pendientes">
-          <Button size="xs" colorScheme="yellow" variant="solid">
-            <Text>60</Text>
+          <Button
+            variant={filter === States.pending ? 'outline' : 'solid'}
+            onClick={() =>
+              setFilter((f) => (f === States.pending ? null : States.pending))
+            }
+            size="xs"
+            colorScheme="yellow"
+          >
+            <Text>{invited}</Text>
           </Button>
         </Tooltip>
 
         <Tooltip label="aceptados">
-          <Button size="xs" colorScheme="green" variant="solid">
-            <Text>30</Text>
+          <Button
+            variant={filter === States.accepted ? 'outline' : 'solid'}
+            onClick={() =>
+              setFilter((f) => (f === States.accepted ? null : States.accepted))
+            }
+            size="xs"
+            colorScheme="green"
+          >
+            <Text>{accepted}</Text>
           </Button>
         </Tooltip>
 
         <Tooltip label="rechazados">
-          <Button size="xs" colorScheme="red" variant="solid">
-            <Text>10</Text>
+          <Button
+            variant={filter === States.declined ? 'outline' : 'solid'}
+            onClick={() =>
+              setFilter((f) => (f === States.declined ? null : States.declined))
+            }
+            size="xs"
+            colorScheme="red"
+          >
+            <Text>{declined}</Text>
           </Button>
         </Tooltip>
       </HStack>
@@ -117,31 +150,31 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
         w="100%"
         borderRadius="md"
         flex={1}
-        bg="linear-gradient(to bottom, #657A52, #1A1A1A)"
+        bg="linear-gradient(to bottom, #333D29, #1A1A1A)"
+        overflow={'scroll'}
       >
-        {guests.map((guest) => {
-          return (
-            <GuestRow key={guest.id} guest={guest}/>
-          );
+        {filteredList.map((guest) => {
+          return <GuestRow key={guest.id} guest={guest} />
         })}
       </VStack>
     </VStack>
-  );
-};
+  )
+}
 
 export const getServerSideProps = withPageAuth({
   redirectTo: '/admin',
   getServerSideProps: async (context, client) => {
-    const { guests } = await getGuests(10);
+    const { guests, count } = await getGuests(10)
 
-    console.log({ guests });
+    console.log({ guests })
 
     return {
       props: {
         guests,
+        count,
       },
-    };
+    }
   },
-});
+})
 
-export default Home;
+export default Home

@@ -1,7 +1,7 @@
 export enum States {
-  pending,
-  accepted,
-  declined,
+  pending = 'pending',
+  accepted = 'accepted',
+  declined = 'declined',
 }
 
 export type Guest = {
