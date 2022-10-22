@@ -20,6 +20,7 @@ import {
 } from 'react-icons/bs'
 import { getGuestType } from '../lib/guesttype'
 import { Guest, GuestType, States } from '../types'
+import { EditGuest } from './EditGuest'
 
 type Props = {
   guest: Guest
@@ -66,6 +67,7 @@ export const GuestRow: React.FC<Props> = ({ guest }) => {
     state === States.accepted ? amount : state === States.declined ? 0 : '...'
   return (
     <HStack p={2} w="100%" position="relative" alignItems="center">
+      <EditGuest guest={guest} />
       <Tooltip hasArrow label={stateLabels[state]}>
         <Center>
           <Icon color={stateColors[state]} as={stateIcons[state]} />
