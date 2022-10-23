@@ -29,14 +29,16 @@ import { useFormik } from 'formik'
 import { ChangeEvent } from 'react'
 import removeAccents from 'remove-accents'
 
-type Props = {}
+type Props = {
+  onSuccess: () => void
+}
 
 const toNames = (raw: string): string[] => raw.split(',').map((s) => s.trim())
 const toSlug = (raw: string): string =>
   removeAccents.remove(toNames(raw).join('y').toLowerCase()) // TODO: Remove accents
 const toAmount = (raw: string): number => raw.split(',').length
 
-export const AddGuest: React.FC<Props> = () => {
+export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
   const toast = useToast({
     position: 'bottom-right',
   })
@@ -77,6 +79,7 @@ export const AddGuest: React.FC<Props> = () => {
 
         onClose()
         formik.resetForm()
+        onSuccess()
       } catch (e: any) {
         toast({
           title: e.message,

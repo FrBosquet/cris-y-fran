@@ -34,23 +34,18 @@ export const getFromSlug = async (slug: string): Promise<Guest> => {
   return data
 }
 
-export const getGuests = async (
-  amount: number,
-  skip?: number,
-  filter?: Partial<Guest>
-): Promise<{ guests: Guest[]; count: number }> => {
-  const { data, count, error } = await client
+export const getGuests = async (): Promise<Guest[]> => {
+  const { data } = await client
     .from('guests')
-    .select(`
+    .select(
+      `
       *,
       host (name)
-    `, { count: 'exact' })
-    .limit(amount)
+    `
+    )
+    .order('slug', { ascending: true })
 
-  console.log({ data, count, error })
+  console.log({ data })
 
-  return {
-    guests: data as Guest[],
-    count: count as number,
-  }
+  return data as Guest[]
 }

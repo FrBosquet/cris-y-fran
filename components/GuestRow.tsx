@@ -24,6 +24,7 @@ import { EditGuest } from './EditGuest'
 
 type Props = {
   guest: Guest
+  onEditSuccess: () => void
 }
 
 const stateIcons = {
@@ -55,7 +56,7 @@ const typeLabels = {
   [GuestType.family]: 'Familia',
 }
 
-export const GuestRow: React.FC<Props> = ({ guest }) => {
+export const GuestRow: React.FC<Props> = ({ guest, onEditSuccess }) => {
   const { state, amount, slug } = guest
   const type = getGuestType(guest)
 
@@ -82,7 +83,7 @@ export const GuestRow: React.FC<Props> = ({ guest }) => {
       </Tooltip>
 
       <VStack alignItems="start" flex={1} spacing={0}>
-        <EditGuest guest={guest}>
+        <EditGuest guest={guest} onSuccess={onEditSuccess}>
           <Text noOfLines={1}>{guest.name.join(', ')}</Text>
         </EditGuest>
         <HStack>

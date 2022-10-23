@@ -24,19 +24,19 @@ import {
 } from '@chakra-ui/react'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect } from 'react'
 import { Guest } from '../types'
 
 type Props = {
   guest: Guest
   children: React.ReactNode
+  onSuccess: () => void
 }
 
 const toNames = (raw: string): string[] => raw.split(',').map((s) => s.trim())
-const toSlug = (raw: string): string => toNames(raw).join('y').toLowerCase() // TODO: Remove accents
 const toAmount = (raw: string): number => raw.split(',').length
 
-export const EditGuest: React.FC<Props> = ({ children, guest }) => {
+export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
   const toast = useToast({
     position: 'bottom-right',
   })
@@ -78,6 +78,7 @@ export const EditGuest: React.FC<Props> = ({ children, guest }) => {
 
         onClose()
         formik.resetForm()
+        onSuccess()
       } catch (e: any) {
         toast({
           title: e.message,
@@ -86,6 +87,14 @@ export const EditGuest: React.FC<Props> = ({ children, guest }) => {
       }
     },
   })
+
+  useEffect(() => {
+    formik.setValues({
+      rawNames: guest.name.join(', '),
+      isFamily: guest.isFamily,
+      maxAmount: guest.maxAmount,
+    })
+  }, [guest])
 
   const handleWriteName = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value

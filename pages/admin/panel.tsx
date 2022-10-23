@@ -22,16 +22,12 @@ import { Guest, States } from '../../types'
 
 type Props = {
   guests: Guest[]
-  count: number
 }
 
 const count = (prop: keyof Guest) => (acc: number, guest: Guest) =>
   acc + Number(guest[prop])
 
-const Home: NextPage<Props> = ({
-  guests: serverGuests,
-  count: serverCount,
-}) => {
+const Home: NextPage<Props> = ({ guests: serverGuests }) => {
   const [guests, setGuests] = useState(serverGuests)
   const [filter, setFilter] = useState<null | States>(null)
   const { replace } = useRouter()
@@ -62,6 +58,12 @@ const Home: NextPage<Props> = ({
     return guests.filter(({ state }) => state === filter)
   }, [guests, filter])
 
+  const refresh = useCallback(async () => {
+    const refreshedGuests = await getGuests()
+
+    setGuests(refreshedGuests)
+  }, [setGuests])
+
   return (
     <VStack h="100vh" bg="gray.1000" color="white" p={4} spacing={3}>
       <HStack p={4} bg="gray.900" shadow="base" w="100%" borderRadius="md">
@@ -78,7 +80,7 @@ const Home: NextPage<Props> = ({
 
         <Spacer />
 
-        <AddGuest />
+        <AddGuest onSuccess={refresh} />
       </HStack>
 
       <HStack p={2} bg="gray.800" shadow="base" w="100%" borderRadius="md">
@@ -137,7 +139,9 @@ const Home: NextPage<Props> = ({
         overflow={'scroll'}
       >
         {filteredList.map((guest) => {
-          return <GuestRow key={guest.id} guest={guest} />
+          return (
+            <GuestRow onEditSuccess={refresh} key={guest.id} guest={guest} />
+          )
         })}
       </VStack>
     </VStack>
@@ -147,12 +151,11 @@ const Home: NextPage<Props> = ({
 export const getServerSideProps = withPageAuth({
   redirectTo: '/admin',
   getServerSideProps: async () => {
-    const { guests, count } = await getGuests(10)
+    const guests = await getGuests()
 
     return {
       props: {
         guests,
-        count,
       },
     }
   },
