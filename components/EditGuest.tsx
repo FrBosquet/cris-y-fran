@@ -57,7 +57,6 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
             isFamily: values.isFamily,
             name: toNames(values.rawNames),
             maxAmount: values.maxAmount,
-            host: sessionStorage.getItem('host_id'),
           })
           .match({ id: guest.id })
 
