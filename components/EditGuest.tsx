@@ -8,11 +8,10 @@ import {
   IconButton,
   Input,
   Spacer,
-  Tooltip,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { BsDash, BsFillPersonPlusFill, BsPlus } from 'react-icons/bs'
+import { BsDash, BsPlus } from 'react-icons/bs'
 
 import {
   Modal,
@@ -30,13 +29,14 @@ import { Guest } from '../types'
 
 type Props = {
   guest: Guest
+  children: React.ReactNode
 }
 
 const toNames = (raw: string): string[] => raw.split(',').map((s) => s.trim())
 const toSlug = (raw: string): string => toNames(raw).join('y').toLowerCase() // TODO: Remove accents
 const toAmount = (raw: string): number => raw.split(',').length
 
-export const EditGuest: React.FC<Props> = ({ guest }) => {
+export const EditGuest: React.FC<Props> = ({ children, guest }) => {
   const toast = useToast({
     position: 'bottom-right',
   })
@@ -96,15 +96,9 @@ export const EditGuest: React.FC<Props> = ({ guest }) => {
 
   return (
     <>
-      <Tooltip label="añadir">
-        <IconButton
-          size="sm"
-          aria-label="añadir"
-          colorScheme="blue"
-          onClick={onOpen}
-          icon={<BsFillPersonPlusFill />}
-        />
-      </Tooltip>
+      <Button onClick={onOpen} variant="ghost">
+        {children}
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

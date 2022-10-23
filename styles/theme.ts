@@ -123,6 +123,12 @@ export const theme = extendTheme({
         minW: '4rem',
         colorScheme: 'green',
       },
+      variants: {
+        ghost: {
+          padding: 0,
+          shadow: 'none'
+        }
+      }
     },
     Heading: {
       baseStyle: {

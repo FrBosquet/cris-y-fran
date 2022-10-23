@@ -67,7 +67,6 @@ export const GuestRow: React.FC<Props> = ({ guest }) => {
     state === States.accepted ? amount : state === States.declined ? 0 : '...'
   return (
     <HStack p={2} w="100%" position="relative" alignItems="center">
-      <EditGuest guest={guest} />
       <Tooltip hasArrow label={stateLabels[state]}>
         <Center>
           <Icon color={stateColors[state]} as={stateIcons[state]} />
@@ -81,8 +80,11 @@ export const GuestRow: React.FC<Props> = ({ guest }) => {
       <Tooltip hasArrow label={guest.host.name}>
         <Avatar size="xs" name={guest.host.name} />
       </Tooltip>
+
       <VStack alignItems="start" flex={1} spacing={0}>
-        <Text noOfLines={1}>{guest.name.join(', ')}</Text>
+        <EditGuest guest={guest}>
+          <Text noOfLines={1}>{guest.name.join(', ')}</Text>
+        </EditGuest>
         <HStack>
           <Link href={`/${slug}`} passHref>
             <Text
