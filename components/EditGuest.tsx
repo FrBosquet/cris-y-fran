@@ -2,7 +2,6 @@ import {
   Button,
   Checkbox,
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
   HStack,
@@ -46,10 +45,9 @@ export const EditGuest: React.FC<Props> = ({ guest }) => {
 
   const formik = useFormik({
     initialValues: {
-      rawNames: guest.name.join(''),
+      rawNames: guest.name.join(', '),
       isFamily: guest.isFamily,
       maxAmount: guest.maxAmount,
-      slug: guest.slug,
     },
     onSubmit: async (values) => {
       try {
@@ -57,7 +55,6 @@ export const EditGuest: React.FC<Props> = ({ guest }) => {
           .from('guests')
           .update({
             isFamily: values.isFamily,
-            slug: values.slug,
             name: toNames(values.rawNames),
             maxAmount: values.maxAmount,
             host: sessionStorage.getItem('host_id'),
@@ -124,18 +121,6 @@ export const EditGuest: React.FC<Props> = ({ guest }) => {
                 value={formik.values.rawNames}
               />
               <FormHelperText>Separados por comas</FormHelperText>
-            </FormControl>
-
-            <FormControl isInvalid={!!formik.errors.slug}>
-              <FormLabel>Enlace</FormLabel>
-              <Input
-                required
-                name="slug"
-                onChange={formik.handleChange}
-                value={formik.values.slug}
-              />
-              <FormHelperText>Enlace personalizado y unico</FormHelperText>
-              <FormErrorMessage>{formik.errors.slug}</FormErrorMessage>
             </FormControl>
 
             <FormControl>

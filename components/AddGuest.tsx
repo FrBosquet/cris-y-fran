@@ -27,11 +27,13 @@ import {
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
 import { ChangeEvent } from 'react'
+import removeAccents from 'remove-accents'
 
 type Props = {}
 
 const toNames = (raw: string): string[] => raw.split(',').map((s) => s.trim())
-const toSlug = (raw: string): string => toNames(raw).join('y').toLowerCase() // TODO: Remove accents
+const toSlug = (raw: string): string =>
+  removeAccents.remove(toNames(raw).join('y').toLowerCase()) // TODO: Remove accents
 const toAmount = (raw: string): number => raw.split(',').length
 
 export const AddGuest: React.FC<Props> = () => {
