@@ -40,7 +40,7 @@ const Home: NextPage<Props> = ({ guest }) => {
     loading.on()
 
     if (isSingle || isModalOpen) {
-      const updatedGuest = await updateGuest(guest.id, {
+      const updatedGuest = await updateGuest(guest.event, guest.slug, {
         state: States.accepted,
         amount: counter,
       })
@@ -56,7 +56,7 @@ const Home: NextPage<Props> = ({ guest }) => {
 
   const handleClickNo = async () => {
     loading.on()
-    const updatedGuest = await updateGuest(guest.id, {
+    const updatedGuest = await updateGuest(guest.event, guest.slug, {
       state: States.declined,
       amount: counter,
     })

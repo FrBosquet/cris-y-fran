@@ -5,7 +5,7 @@ export enum States {
 }
 
 export type Guest = {
-  id: number
+  event: number
   name: string[]
   slug: string
   isFamily: boolean

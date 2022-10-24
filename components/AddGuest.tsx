@@ -28,17 +28,16 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
 import { ChangeEvent } from 'react'
 import removeAccents from 'remove-accents'
+import { toAmount, toNames, toSlug } from '../lib/string'
+import { useHostId } from '../lib/useHost'
 
 type Props = {
   onSuccess: () => void
 }
 
-const toNames = (raw: string): string[] => raw.split(',').map((s) => s.trim())
-const toSlug = (raw: string): string =>
-  removeAccents.remove(toNames(raw).join('y').toLowerCase()) // TODO: Remove accents
-const toAmount = (raw: string): number => raw.split(',').length
-
 export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
+  const { isLoadingHostId, hostId } = useHostId()
+
   const toast = useToast({
     position: 'bottom-right',
   })
@@ -59,12 +58,12 @@ export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
           slug: values.slug,
           name: toNames(values.rawNames),
           maxAmount: values.maxAmount,
-          host: sessionStorage.getItem('host_id'),
+          host: hostId,
+          event: process.env.NEXT_PUBLIC_EVENT_ID,
         })
 
         if (error) {
-          if ((error.code = '23505')) {
-            // TODO: This error is not unique for duplicated slug
+          if (error.code === '23505') {
             formik.setFieldError('slug', 'Este enlace ya existe')
             throw new Error('El enlace ya existe, utiliza uno distinto: ')
           }
@@ -89,7 +88,7 @@ export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
     },
   })
 
-  const handleWriteName = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
 
     const amount = toAmount(value)
@@ -97,6 +96,12 @@ export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
     formik.setFieldValue('maxAmount', amount)
     formik.setFieldValue('slug', toSlug(value))
     formik.setFieldValue('rawNames', value)
+  }
+
+  const handleChangeSlug = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+
+    formik.setFieldValue('slug', removeAccents(value))
   }
 
   const { maxAmount, isFamily, rawNames } = formik.values
@@ -124,7 +129,7 @@ export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
               <Input
                 required
                 name="rawNames"
-                onChange={handleWriteName}
+                onChange={handleChangeName}
                 value={formik.values.rawNames}
               />
               <FormHelperText>Separados por comas</FormHelperText>
@@ -135,7 +140,7 @@ export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
               <Input
                 required
                 name="slug"
-                onChange={formik.handleChange}
+                onChange={handleChangeSlug}
                 value={formik.values.slug}
               />
               <FormHelperText>Enlace personalizado y unico</FormHelperText>
@@ -198,7 +203,7 @@ export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
             <Button
               variant="ghost"
               onClick={() => formik.resetForm()}
-              isLoading={formik.isSubmitting}
+              isLoading={formik.isSubmitting || isLoadingHostId}
             >
               Limpiar
             </Button>
@@ -206,7 +211,7 @@ export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
             <Button
               colorScheme="blue"
               onClick={() => formik.handleSubmit()}
-              isLoading={formik.isSubmitting}
+              isLoading={formik.isSubmitting || isLoadingHostId}
             >
               Añadir
             </Button>

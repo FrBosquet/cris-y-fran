@@ -25,6 +25,8 @@ import {
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
 import { ChangeEvent, useEffect } from 'react'
+import { toAmount, toNames } from '../lib/string'
+import { useHostId } from '../lib/useHost'
 import { Guest } from '../types'
 
 type Props = {
@@ -33,10 +35,9 @@ type Props = {
   onSuccess: () => void
 }
 
-const toNames = (raw: string): string[] => raw.split(',').map((s) => s.trim())
-const toAmount = (raw: string): number => raw.split(',').length
-
 export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
+  const { isLoadingHostId, hostId } = useHostId()
+
   const toast = useToast({
     position: 'bottom-right',
   })
@@ -57,9 +58,8 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
             isFamily: values.isFamily,
             name: toNames(values.rawNames),
             maxAmount: values.maxAmount,
-            host: sessionStorage.getItem('host_id'),
           })
-          .match({ id: guest.id })
+          .match({ slug: guest.slug, event: guest.event })
 
         if (error) {
           if ((error.code = '23505')) {
@@ -105,7 +105,7 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
 
   return (
     <>
-      <Button onClick={onOpen} variant="ghost">
+      <Button onClick={onOpen} variant="ghost" _hover={{ color: 'green.400' }}>
         {children}
       </Button>
 

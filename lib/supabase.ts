@@ -8,15 +8,17 @@ export const client = createClient(
 )
 
 export const updateGuest = async (
-  id: number,
+  event: number,
+  slug: string,
   update: Partial<Guest>
 ): Promise<Guest> => {
   const { data } = await client
     .from('guests')
     .update(update)
-    .eq('id', id)
+    .eq('event', event)
+    .eq('slug', slug)
     .select()
-    .order('id')
+    .order('slug')
     .limit(1)
     .single()
 
@@ -27,7 +29,7 @@ export const getFromSlug = async (slug: string): Promise<Guest> => {
   const { data } = await client
     .from('guests')
     .select()
-    .match({ slug })
+    .match({ slug, event: process.env.NEXT_PUBLIC_EVENT_ID })
     .limit(1)
     .single()
 
@@ -43,9 +45,8 @@ export const getGuests = async (): Promise<Guest[]> => {
       host (name)
     `
     )
+    .match({ event: process.env.NEXT_PUBLIC_EVENT_ID })
     .order('slug', { ascending: true })
-
-  console.log({ data })
 
   return data as Guest[]
 }

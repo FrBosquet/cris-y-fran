@@ -140,7 +140,7 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
       >
         {filteredList.map((guest) => {
           return (
-            <GuestRow onEditSuccess={refresh} key={guest.id} guest={guest} />
+            <GuestRow onEditSuccess={refresh} key={guest.slug} guest={guest} />
           )
         })}
       </VStack>
