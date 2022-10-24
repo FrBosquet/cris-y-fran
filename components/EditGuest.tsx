@@ -26,8 +26,8 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
 import { ChangeEvent, useEffect } from 'react'
 import { toAmount, toNames } from '../lib/string'
-import { useHostId } from '../lib/useHost'
 import { Guest } from '../types'
+import { DeleteGuest } from './DeleteGuest'
 
 type Props = {
   guest: Guest
@@ -36,8 +36,6 @@ type Props = {
 }
 
 export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
-  const { isLoadingHostId, hostId } = useHostId()
-
   const toast = useToast({
     position: 'bottom-right',
   })
@@ -99,6 +97,11 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
   const handleWriteName = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     formik.setFieldValue('rawNames', value)
+  }
+
+  const handleDelete = () => {
+    onClose()
+    onSuccess()
   }
 
   const { maxAmount, isFamily, rawNames } = formik.values
@@ -179,6 +182,12 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
           </ModalBody>
 
           <ModalFooter>
+            <DeleteGuest
+              onDelete={handleDelete}
+              isLoading={formik.isSubmitting}
+              guest={guest}
+            />
+            <Spacer />
             <Button
               variant="ghost"
               onClick={() => formik.resetForm()}

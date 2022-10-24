@@ -8,8 +8,7 @@ export const client = createClient(
 )
 
 export const updateGuest = async (
-  event: number,
-  slug: string,
+  { event, slug }: Guest,
   update: Partial<Guest>
 ): Promise<Guest> => {
   const { data } = await client
@@ -23,6 +22,10 @@ export const updateGuest = async (
     .single()
 
   return data as Guest
+}
+
+export const deleteGuest = async ({ event, slug }: Guest): Promise<void> => {
+  await client.from('guests').delete().eq('event', event).eq('slug', slug)
 }
 
 export const getFromSlug = async (slug: string): Promise<Guest> => {
