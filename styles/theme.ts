@@ -74,6 +74,18 @@ export const colors = {
     '800': '#333D29',
     '900': '#191E15',
   },
+  blue: {
+    '50': '#ECF3F8',
+    '100': '#CBDDEB',
+    '200': '#AAC7DF',
+    '300': '#88B2D2',
+    '400': '#679CC6',
+    '500': '#4686B9',
+    '600': '#386B94',
+    '700': '#2A506F',
+    '800': '#1C364A',
+    '900': '#0E1B25',
+  },
 }
 
 const config: ThemeConfig = {
@@ -126,16 +138,16 @@ export const theme = extendTheme({
       variants: {
         ghost: {
           padding: 0,
-          shadow: 'none'
-        }
-      }
+          shadow: 'none',
+        },
+      },
     },
     Heading: {
       baseStyle: {
         maxW: '90%',
-        color: 'green.600',
-        fontFamily: 'script',
-        fontSize: '4vh !important',
+        fontFamily: 'Cinzel',
+        color: 'gray.200',
+        fontSize: '4vmin !important',
         textAlign: 'center',
       },
       variants: {

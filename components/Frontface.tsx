@@ -5,12 +5,15 @@ import { getGuestTypes } from '../lib/guesttype'
 import { Guest } from '../types'
 
 type CoverProps = { guest: Guest }
-type Props = CoverProps & { isFlipped: boolean; onClick: () => void }
+type Props = CoverProps & {
+  isFlipped: boolean
+  onClick: () => void
+}
 
 const SingleCover = ({ guest: { name } }: CoverProps) => {
   return (
     <VStack w="100%" pb={'10vh'}>
-      <Heading lineHeight={1} fontSize={'8vh'}>
+      <Heading lineHeight={1} fontSize={'8vmin'}>
         {name[0]}
       </Heading>
     </VStack>
@@ -50,12 +53,7 @@ export const Frontface = ({ guest, isFlipped, onClick }: Props) => {
   const { isSingle, isFamily, isCouple } = getGuestTypes(guest)
 
   return (
-    <Card
-      bg={bg}
-      onClick={onClick}
-      rotation={isFlipped ? 180 : 360}
-      width="80%"
-    >
+    <Card onClick={onClick} rotation={isFlipped ? 180 : 360} width="80%">
       {isSingle && <SingleCover guest={guest} />}
       {isFamily && <FamilyCover guest={guest} />}
       {isCouple && <CoupleCover guest={guest} />}

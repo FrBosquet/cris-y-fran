@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Center,
   Heading,
@@ -18,6 +19,7 @@ type Props = {
   isFlipped: boolean
   onClickYes: () => void
   onClickNo: () => void
+  step: number
 }
 
 export const Backface = ({
@@ -26,121 +28,146 @@ export const Backface = ({
   isFlipped,
   onClickYes,
   onClickNo,
+  step,
 }: Props) => {
   const { isSingle } = getGuestTypes(guest)
   const { state } = guest
 
+  console.log({ step })
+
   return (
-    <Card bg={bgi} rotation={isFlipped ? 0 : 180}>
-      <VStack p={'2rem'} borderRadius={'2rem'} h="100%">
-        <Spacer />
-        <Heading color="orange.500" fontSize="4rem" fontFamily="script">
-          Cris + Fran
+    <Card rotation={isFlipped ? 0 : 180}>
+      {/* first layover */}
+      <VStack
+        p={6}
+        shadow="lg"
+        position="absolute"
+        inset={0}
+        top="15%"
+        left="1rem"
+        bg="white"
+        transition="700ms ease-in-out"
+        borderTopLeftRadius={'60vw'}
+        transformOrigin="50% 180%"
+        transform={step > 1 ? 'rotate(35deg)' : undefined}
+        alignItems="end"
+        spacing={0.7}
+      >
+        <Heading textAlign={'right'} pt={2} fontSize="3rem" color="blue.500">
+          Cris y Fran
         </Heading>
-        <Text color="yellow.500">
-          Quieren {isSingle ? 'invitarte' : 'invitaros'} a su boda
+
+        <Text
+          pt={4}
+          textTransform="uppercase"
+          fontFamily="Dosis"
+          textAlign={'right'}
+          fontWeight="600"
+          w="100%"
+        >
+          Cuando
+        </Text>
+        <Text fontFamily="Dosis" textAlign={'right'} w="100%">
+          Sabado, 10 de Junio de 2023
         </Text>
 
-        <HStack>
-          <Text variant="date" fontSize={18}>
-            JULIO
+        <Text
+          pt={4}
+          textTransform="uppercase"
+          fontFamily="Dosis"
+          textAlign={'right'}
+          fontWeight="600"
+          w="100%"
+        >
+          Hora
+        </Text>
+        <Text fontFamily="Dosis" textAlign={'right'} w="100%">
+          A partir de las 17:00
+        </Text>
+
+        <Text
+          pt={4}
+          textTransform="uppercase"
+          fontFamily="Dosis"
+          textAlign={'right'}
+          fontWeight="600"
+          w="100%"
+        >
+          Donde
+        </Text>
+        <Text fontFamily="Dosis" textAlign={'right'} w="100%">
+          Mas dels Doblons
+        </Text>
+        <Text fontFamily="Dosis" textAlign={'right'} w="100%">
+          Camí Vora Rambla, s/n, Almassora, Castellón
+        </Text>
+
+        <Text
+          pt={6}
+          textTransform="uppercase"
+          fontFamily="Dosis"
+          textAlign={'center'}
+          fontWeight="600"
+          w="100%"
+        >
+          Te vienes?
+        </Text>
+        <Center>
+          <Text
+            pt={6}
+            textTransform="uppercase"
+            fontFamily="Dosis"
+            textAlign={'center'}
+            fontWeight="600"
+            w="100%"
+          >
+            Si
           </Text>
           <Text
-            color="green.700"
-            fontFamily="heading"
-            fontSize="3rem"
-            pt="0.7rem"
-            lineHeight={1}
+            pt={6}
+            textTransform="uppercase"
+            fontFamily="Dosis"
+            textAlign={'center'}
+            fontWeight="600"
+            w="100%"
           >
-            22
+            No
           </Text>
-          <Text variant="date" fontSize={18}>
-            2023
-          </Text>
-        </HStack>
-        <Text color="orange.500">A las 12:00</Text>
-
-        <Text color="yellow.500">Que tendrá lugar en:</Text>
-        <Text
-          variant="date"
-          as="a"
-          href="https://goo.gl/maps/wikTZ7xSKfxhwMJ98"
-        >
-          Finca El Pozo del Chanchito
-        </Text>
-        <Text color="pink.800" fontSize="0.8rem">
-          Carretera de la buena suerte S/N, Alicante
-        </Text>
-        <Spacer />
-
-        <Center flexDirection="column" h="25vh">
-          {state === States.pending && (
-            <>
-              <Text pt={4} color="yellow.500">
-                {isSingle ? '¿Contamos contigo?' : '¿Contamos con vosotros?'}
-              </Text>
-              <HStack spacing="1rem">
-                <Button
-                  fontSize={24}
-                  colorScheme="green"
-                  onClick={onClickYes}
-                  isLoading={isLoading}
-                >
-                  Sí
-                </Button>
-                <Button
-                  fontSize={24}
-                  colorScheme="orange"
-                  onClick={onClickNo}
-                  isLoading={isLoading}
-                >
-                  No
-                </Button>
-              </HStack>
-            </>
-          )}
-
-          {state === States.accepted && (
-            <>
-              <Text pt={8} color="green.500" fontSize={32}>
-                ¡Fantástico! Allí nos veremos
-              </Text>
-              <Text color="orange.500">
-                {isSingle
-                  ? '¿Quieres echarnos una mano? Este es nuestro IBAN'
-                  : '¿Queréis echarnos una mano? Este es nuestro IBAN'}
-              </Text>
-              <Text size="xs" variant="date">
-                ES5420958788194951189394
-              </Text>
-            </>
-          )}
-
-          {state === States.declined && (
-            <>
-              <Text fontSize={32} pt={8} color="orange.500">
-                ¡Nos da mucha pena!
-              </Text>
-              <Text color="pink.500">
-                {isSingle
-                  ? 'Si cambias de opinión, solo tienes que hacer click aquí'
-                  : 'Si cambiais de opinión, solo teneis que hacer click aquí'}
-              </Text>
-              <HStack spacing="1rem">
-                <Button
-                  fontSize={18}
-                  colorScheme="green"
-                  onClick={onClickYes}
-                  isLoading={isLoading}
-                >
-                  {isSingle
-                    ? '¡He cambiado de opinión, me apunto!'
-                    : '¡Hemos cambiado de opinión, nos apuntamos!'}
-                </Button>
-              </HStack>
-            </>
-          )}
         </Center>
+      </VStack>
+
+      {/* second layover */}
+      <VStack
+        shadow="lg"
+        position="absolute"
+        bottom={0}
+        w="100%"
+        style={{
+          aspectRatio: 1,
+        }}
+        left="1rem"
+        bg="blue.200"
+        transition="700ms ease-in-out"
+        borderRadius={'50%'}
+        transformOrigin="50% 180%"
+        transform={step > 0 ? 'rotate(45deg)' : undefined}
+        justifyContent="center"
+        alignItems="end"
+        p={8}
+        pr={14}
+      >
+        <Heading
+          fontSize="4rem"
+          color="blue.800"
+          textAlign={'right'}
+          fontFamily="script"
+        >
+          Nos casamos!
+        </Heading>
+        <Text textAlign="right" w="70%">
+          Y hemos pensado en ti para que nos acompañes en nuestro día mas
+          especial
+        </Text>
       </VStack>
     </Card>
   )
