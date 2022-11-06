@@ -25,16 +25,15 @@ import {
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
 import { ChangeEvent, useEffect } from 'react'
+import { toAmount, toNames } from '../lib/string'
 import { Guest } from '../types'
+import { DeleteGuest } from './DeleteGuest'
 
 type Props = {
   guest: Guest
   children: React.ReactNode
   onSuccess: () => void
 }
-
-const toNames = (raw: string): string[] => raw.split(',').map((s) => s.trim())
-const toAmount = (raw: string): number => raw.split(',').length
 
 export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
   const toast = useToast({
@@ -58,7 +57,7 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
             name: toNames(values.rawNames),
             maxAmount: values.maxAmount,
           })
-          .match({ id: guest.id })
+          .match({ slug: guest.slug, event: guest.event })
 
         if (error) {
           if ((error.code = '23505')) {
@@ -100,11 +99,16 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
     formik.setFieldValue('rawNames', value)
   }
 
+  const handleDelete = () => {
+    onClose()
+    onSuccess()
+  }
+
   const { maxAmount, isFamily, rawNames } = formik.values
 
   return (
     <>
-      <Button onClick={onOpen} variant="ghost">
+      <Button onClick={onOpen} variant="ghost" _hover={{ color: 'green.400' }}>
         {children}
       </Button>
 
@@ -178,6 +182,12 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
           </ModalBody>
 
           <ModalFooter>
+            <DeleteGuest
+              onDelete={handleDelete}
+              isLoading={formik.isSubmitting}
+              guest={guest}
+            />
+            <Spacer />
             <Button
               variant="ghost"
               onClick={() => formik.resetForm()}
