@@ -51,7 +51,7 @@ export const GuestRow: React.FC<Props> = ({ guest, onEditSuccess }) => {
   const type = getGuestType(guest)
 
   const copy = () => {
-    navigator.clipboard.writeText(`${window.location.host}/${slug}`)
+    navigator.clipboard.writeText(`https://${window.location.host}/${slug}`)
   }
 
   const toggleContacted = async () => {
