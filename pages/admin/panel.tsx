@@ -59,6 +59,7 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
 
   const filteredList = useMemo(() => {
     return guests
+      .sort((a, b) => (a.slug > b.slug ? 1 : -1))
       .filter(({ state }) => {
         if (!filter) return true
 
