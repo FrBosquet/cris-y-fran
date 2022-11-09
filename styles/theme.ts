@@ -89,7 +89,7 @@ export const theme = extendTheme({
   },
   colors,
   fonts: {
-    script: `'Amatic SC', cursive`,
+    script: `'Amatic', cursive`,
     body: `'Josefin Sans', serif`,
   },
   config,
@@ -180,10 +180,7 @@ export const theme = extendTheme({
           fontSize: 'clamp(0.8rem, 2vh, 3rem)',
         },
         md: {
-          fontSize: 'clamp(1rem, 3vh, 4rem)',
-        },
-        xl: {
-          fontSize: 'clamp(2rem, 10vh, 10rem)',
+          fontSize: 'clamp(1rem, 2.2vh, 4rem)',
         },
       },
       variants: {

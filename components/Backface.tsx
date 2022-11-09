@@ -82,7 +82,7 @@ export const Backface = ({
           <VStack
             flex={1}
             borderLeft={line}
-            px={8}
+            px={4}
             h="100%"
             justifyContent="space-around"
           >
