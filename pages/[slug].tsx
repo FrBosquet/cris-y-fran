@@ -96,21 +96,24 @@ const Home: NextPage<Props> = ({ guest }) => {
             </Text>
             <Center>
               <IconButton
+                variant="base"
+                flex={0}
+                bg="black"
                 size="lg"
-                shadow="none"
-                bg="none"
                 aria-label="menos"
                 icon={<MinusIcon />}
                 disabled={counter === 1}
                 onClick={() => setCounter((v) => v - 1)}
               />
-              <Text fontSize={50} px={8} color="pink.300" fontFamily="heading">
+              <Text fontSize={50} px={8} color="black" fontFamily="heading">
                 {counter}
               </Text>
               <IconButton
+                variant="base"
+                flex={0}
+                bg="black"
                 size="lg"
                 shadow="none"
-                bg="none"
                 aria-label="menos"
                 icon={<AddIcon />}
                 disabled={counter === guest.maxAmount}
@@ -121,6 +124,7 @@ const Home: NextPage<Props> = ({ guest }) => {
 
           <ModalFooter>
             <Button
+              variant="base"
               colorScheme="green"
               isLoading={isLoading}
               onClick={handleClickYes}

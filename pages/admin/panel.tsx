@@ -4,6 +4,8 @@ import {
   Heading,
   HStack,
   IconButton,
+  Input,
+  Select,
   Spacer,
   Text,
   Tooltip,
@@ -15,6 +17,7 @@ import { useSessionContext } from '@supabase/auth-helpers-react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
+import { BsSearch } from 'react-icons/bs'
 import { AddGuest } from '../../components/AddGuest'
 import { GuestRow } from '../../components/GuestRow'
 import { getGuests } from '../../lib/supabase'
@@ -29,6 +32,8 @@ const count = (prop: keyof Guest) => (acc: number, guest: Guest) =>
 
 const Home: NextPage<Props> = ({ guests: serverGuests }) => {
   const [guests, setGuests] = useState(serverGuests)
+  const [hostFilter, setHostFilter] = useState<string>('Cris Tena')
+  const [nameFilter, setNameFilter] = useState('')
   const [filter, setFilter] = useState<null | States>(null)
   const { replace } = useRouter()
   const { supabaseClient } = useSessionContext()
@@ -53,10 +58,23 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
     .reduce(count('maxAmount'), 0)
 
   const filteredList = useMemo(() => {
-    if (filter === null) return guests
+    return guests
+      .filter(({ state }) => {
+        if (!filter) return true
 
-    return guests.filter(({ state }) => state === filter)
-  }, [guests, filter])
+        return state === filter
+      })
+      .filter(({ slug }) => {
+        if (nameFilter.trim().length === 0) return true
+
+        return slug.includes(nameFilter)
+      })
+      .filter(({ host }) => {
+        if (hostFilter.length === 0) return true
+
+        return host.name === hostFilter
+      })
+  }, [guests, filter, nameFilter, hostFilter])
 
   const refresh = useCallback(async () => {
     const refreshedGuests = await getGuests()
@@ -64,11 +82,20 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
     setGuests(refreshedGuests)
   }, [setGuests])
 
+  const hosts = useMemo(() => {
+    return guests.reduce<string[]>((acc, el) => {
+      if (acc.includes(el.host.name)) return acc
+
+      return [...acc, el.host.name]
+    }, [])
+  }, [guests])
+
   return (
     <VStack h="100vh" bg="gray.1000" color="white" p={4} spacing={3}>
       <HStack p={4} bg="gray.900" shadow="base" w="100%" borderRadius="md">
         <Tooltip label="salir">
           <IconButton
+            variant="admin"
             size="sm"
             aria-label="salir"
             colorScheme="red"
@@ -76,7 +103,9 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
             icon={<LockIcon />}
           />
         </Tooltip>
-        <Heading variant="panel">Administrador</Heading>
+        <Heading variant="sans" size="sm" color="white">
+          Administrador
+        </Heading>
 
         <Spacer />
 
@@ -84,10 +113,39 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
       </HStack>
 
       <HStack p={2} bg="gray.800" shadow="base" w="100%" borderRadius="md">
-        <Text fontSize="xs">{guests.length} invitaciones /</Text>
-        <Text fontSize="xs">
+        <BsSearch />
+        <Input
+          w="15ch"
+          value={nameFilter}
+          onChange={(e) => {
+            setNameFilter(e.currentTarget.value)
+          }}
+        />
+
+        <Select
+          w="auto"
+          placeholder="Todos"
+          color={'gray'}
+          onChange={(e) => {
+            setHostFilter(e.currentTarget.value)
+          }}
+        >
+          {hosts.map((host) => (
+            <option key={host} value={host}>
+              {host}
+            </option>
+          ))}
+        </Select>
+
+        <Spacer />
+
+        <Text fontSize="xs" color="white">
+          {guests.length} invitaciones /
+        </Text>
+        <Text fontSize="xs" color="white">
           {guests.reduce((acc, guest) => acc + guest.maxAmount, 0)} invitados
         </Text>
+
         <Spacer />
 
         <Tooltip label="pendientes">

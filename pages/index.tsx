@@ -12,7 +12,7 @@ const Home: NextPage = () => {
     <Center h="100vh" bg="green.100">
       <VStack>
         <Heading fontSize={112}>¡Oopsie!</Heading>
-        <Text>
+        <Text color="green.600" p={4}>
           No te hemos encontrado entre la lista de invitados. ¿Podrias revisar
           tu enlace?
         </Text>

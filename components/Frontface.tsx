@@ -1,5 +1,5 @@
 import { Heading, VStack } from '@chakra-ui/react'
-import bg from 'public/bg.png'
+import bg from 'public/paper.webp'
 import { Card } from '../components/Card'
 import { getGuestTypes } from '../lib/guesttype'
 import { Guest } from '../types'
@@ -10,7 +10,7 @@ type Props = CoverProps & { isFlipped: boolean; onClick: () => void }
 const SingleCover = ({ guest: { name } }: CoverProps) => {
   return (
     <VStack w="100%" pb={'10vh'}>
-      <Heading lineHeight={1} fontSize={'8vh'}>
+      <Heading lineHeight={1} fontSize={'8vh'} mixBlendMode="color">
         {name[0]}
       </Heading>
     </VStack>

@@ -89,15 +89,34 @@ export const theme = extendTheme({
   },
   colors,
   fonts: {
-    heading: 'Fidra',
-    script: `'Mrs Saint Delafield', script`,
-    body: `'Josefin Slab', serif`,
+    script: `'Amatic SC', cursive`,
+    body: `'Josefin Sans', serif`,
   },
   config,
   components: {
     Text: {
       baseStyle: {
         textAlign: 'center',
+        color: 'black',
+        lineHeight: '1.2',
+        textTransform: 'uppercase',
+      },
+      defaultProps: {
+        size: 'md',
+      },
+      sizes: {
+        xs: {
+          fontSize: 'clamp(0.4rem, 0.9vh, 1rem)',
+        },
+        sm: {
+          fontSize: 'clamp(0.6rem, 1vh, 2rem)',
+        },
+        md: {
+          fontSize: 'clamp(0.8rem, 1.3vh, 3rem)',
+        },
+        xxl: {
+          fontSize: 'clamp(4rem, 5vh, 5rem)',
+        },
       },
       variants: {
         date: {
@@ -112,35 +131,66 @@ export const theme = extendTheme({
           lineHeight: 2,
         },
         monospace: {
+          textTransform: 'none',
           fontFamily: 'monospace',
+        },
+        soft: {
+          textTransform: 'none',
         },
       },
     },
     Button: {
       baseStyle: {
-        shadow: 'base',
         lineHeight: 1,
         minW: '4rem',
-        colorScheme: 'green',
+        color: 'white',
+        textTransform: 'uppercase',
       },
       variants: {
         ghost: {
           padding: 0,
-          shadow: 'none'
-        }
-      }
+        },
+        base: {
+          flex: 1,
+          borderRadius: 'none',
+          backgroundColor: 'black',
+          _hover: {
+            backgroundColor: 'gray.700',
+          },
+          _active: {
+            backgroundColor: 'gray.500',
+            color: 'gray.900',
+          },
+        },
+      },
     },
     Heading: {
       baseStyle: {
         maxW: '90%',
-        color: 'green.600',
         fontFamily: 'script',
-        fontSize: '4vh !important',
         textAlign: 'center',
+        letterSpacing: '0.5rem',
+        color: 'black',
+      },
+      defaultProps: {
+        size: 'md',
+      },
+      sizes: {
+        sm: {
+          fontSize: 'clamp(0.8rem, 2vh, 3rem)',
+        },
+        md: {
+          fontSize: 'clamp(1rem, 3vh, 4rem)',
+        },
+        xl: {
+          fontSize: 'clamp(2rem, 10vh, 10rem)',
+        },
       },
       variants: {
-        panel: {
+        sans: {
           fontFamily: 'body',
+          textTransform: 'uppercase',
+          letterSpacing: '0.25rem',
         },
       },
     },

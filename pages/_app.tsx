@@ -1,6 +1,4 @@
 import { ChakraProvider } from '@chakra-ui/react'
-import '@fontsource/josefin-slab/700.css'
-import '@fontsource/mrs-saint-delafield/400.css'
 import type { AppProps } from 'next/app'
 import { useState } from 'react'
 import '../styles/globals.css'

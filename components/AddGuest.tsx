@@ -110,6 +110,7 @@ export const AddGuest: React.FC<Props> = ({ onSuccess }) => {
     <>
       <Tooltip label="añadir">
         <IconButton
+          variant="admin"
           size="sm"
           aria-label="añadir"
           colorScheme="blue"

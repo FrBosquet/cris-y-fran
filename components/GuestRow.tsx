@@ -6,20 +6,21 @@ import {
   IconButton,
   Text,
   Tooltip,
+  useBoolean,
   VStack,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import {
   BsBack,
   BsCheckCircleFill,
-  BsFillPeopleFill,
-  BsFillPersonPlusFill,
   BsFillXCircleFill,
-  BsPersonFill,
   BsQuestionCircle,
+  BsQuestionCircleFill,
 } from 'react-icons/bs'
+import { TiTick } from 'react-icons/ti'
 import { getGuestType } from '../lib/guesttype'
-import { Guest, GuestType, States } from '../types'
+import { updateGuest } from '../lib/supabase'
+import { Guest, States } from '../types'
 import { EditGuest } from './EditGuest'
 
 type Props = {
@@ -44,24 +45,24 @@ const stateColors = {
   [States.declined]: 'red.300',
 }
 
-const typeIcons = {
-  [GuestType.single]: BsPersonFill,
-  [GuestType.couple]: BsFillPeopleFill,
-  [GuestType.family]: BsFillPersonPlusFill,
-}
-
-const typeLabels = {
-  [GuestType.single]: 'Soltero',
-  [GuestType.couple]: 'Pareja',
-  [GuestType.family]: 'Familia',
-}
-
 export const GuestRow: React.FC<Props> = ({ guest, onEditSuccess }) => {
-  const { state, amount, slug } = guest
+  const [isLoading, loading] = useBoolean(false)
+  const { state, amount, slug, contacted } = guest
   const type = getGuestType(guest)
 
   const copy = () => {
     navigator.clipboard.writeText(`${window.location.host}/${slug}`)
+  }
+
+  const toggleContacted = async () => {
+    loading.on()
+
+    await updateGuest(guest, {
+      contacted: !contacted,
+    })
+
+    await onEditSuccess()
+    loading.off()
   }
 
   const visibleAmount =
@@ -73,18 +74,18 @@ export const GuestRow: React.FC<Props> = ({ guest, onEditSuccess }) => {
           <Icon color={stateColors[state]} as={stateIcons[state]} />
         </Center>
       </Tooltip>
-      <Tooltip hasArrow label={typeLabels[type]}>
-        <Center>
-          <Icon as={typeIcons[type]} />
-        </Center>
-      </Tooltip>
+
       <Tooltip hasArrow label={guest.host.name}>
         <Avatar size="xs" name={guest.host.name} />
       </Tooltip>
 
       <VStack alignItems="start" flex={1} spacing={0}>
         <EditGuest guest={guest} onSuccess={onEditSuccess}>
-          <Text noOfLines={1}>{guest.name.join(', ')}</Text>
+          <Tooltip label="editar invitacion">
+            <Text noOfLines={1} color="white">
+              {guest.name.join(', ')}
+            </Text>
+          </Tooltip>
         </EditGuest>
         <HStack>
           <Link href={`/${slug}`} passHref>
@@ -101,16 +102,27 @@ export const GuestRow: React.FC<Props> = ({ guest, onEditSuccess }) => {
           </Link>
         </HStack>
       </VStack>
-      <Text>
+      <Text color="white">
         {visibleAmount}/{guest.maxAmount}
       </Text>
       <Tooltip hasArrow label={'Copiar'}>
         <IconButton
+          variant="admin"
           onClick={copy}
           colorScheme="green"
           aria-label="copiar"
           size="xs"
           icon={<BsBack />}
+        />
+      </Tooltip>
+      <Tooltip hasArrow label={'Marcar contactado'}>
+        <IconButton
+          isDisabled={isLoading}
+          onClick={toggleContacted}
+          colorScheme={contacted ? 'green' : 'gray'}
+          aria-label="copiar"
+          size="xs"
+          icon={contacted ? <TiTick /> : <BsQuestionCircleFill />}
         />
       </Tooltip>
     </HStack>

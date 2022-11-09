@@ -15,6 +15,7 @@ export type Guest = {
   host: {
     name: string
   }
+  contacted: boolean
 }
 
 export enum GuestType {

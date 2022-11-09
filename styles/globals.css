@@ -1,5 +1,5 @@
-@import url('./fidra/fidra.css');
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC&family=Josefin+Sans:wght@200;400;600&family=Mrs+Saint+Delafield&display=swap');
 
 root {
-  font-family: 'Josefin Slab';
+  font-family: 'Josefin Sans';
 }

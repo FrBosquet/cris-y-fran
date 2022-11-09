@@ -8,10 +8,11 @@ import {
   IconButton,
   Input,
   Spacer,
+  useBoolean,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { BsDash, BsPlus } from 'react-icons/bs'
+import { BsAlarm, BsDash, BsPlus } from 'react-icons/bs'
 
 import {
   Modal,
@@ -26,7 +27,8 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
 import { ChangeEvent, useEffect } from 'react'
 import { toAmount, toNames } from '../lib/string'
-import { Guest } from '../types'
+import { updateGuest } from '../lib/supabase'
+import { Guest, States } from '../types'
 import { DeleteGuest } from './DeleteGuest'
 
 type Props = {
@@ -36,6 +38,7 @@ type Props = {
 }
 
 export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
+  const [isLoading, loading] = useBoolean(false)
   const toast = useToast({
     position: 'bottom-right',
   })
@@ -102,6 +105,19 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
   const handleDelete = () => {
     onClose()
     onSuccess()
+  }
+
+  const handleSetToPending = async () => {
+    loading.on()
+
+    await updateGuest(guest, {
+      state: States.pending,
+      amount: undefined,
+    })
+
+    await onSuccess()
+    loading.off()
+    onClose()
   }
 
   const { maxAmount, isFamily, rawNames } = formik.values
@@ -181,7 +197,14 @@ export const EditGuest: React.FC<Props> = ({ children, guest, onSuccess }) => {
             </FormControl>
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter gap={2}>
+            <IconButton
+              disabled={guest.state === States.pending}
+              onClick={handleSetToPending}
+              colorScheme="orange"
+              aria-label="a pending"
+              icon={<BsAlarm />}
+            />
             <DeleteGuest
               onDelete={handleDelete}
               isLoading={formik.isSubmitting}
