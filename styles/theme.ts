@@ -89,7 +89,7 @@ export const theme = extendTheme({
   },
   colors,
   fonts: {
-    script: `'Amatic', cursive`,
+    script: `'Amatic SC', cursive`,
     body: `'Josefin Sans', serif`,
   },
   config,
