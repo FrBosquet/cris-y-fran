@@ -97,29 +97,28 @@ export const Backface = ({
           </VStack>
         </HStack>
         {state === States.pending && (
-          <VStack flex={2} w="100%" p={4} spacing={4} justifyContent="end">
+          <VStack flex={2} w="100%" p={4} spacing={4} justifyContent="center">
             <Heading size="sm" variant="sans">
               {isSingle ? '¿Te vienes?' : '¿Os venis?'}
             </Heading>
             <HStack w="100%">
-              <Button variant="base" isLoading={isLoading} onClick={onClickNo}>
-                No
-              </Button>
               <Button variant="base" isLoading={isLoading} onClick={onClickYes}>
                 Si
+              </Button>
+              <Button variant="base" isLoading={isLoading} onClick={onClickNo}>
+                No
               </Button>
             </HStack>
           </VStack>
         )}
         {state === States.accepted && (
-          <VStack flex={2} w="100%" py={4} spacing={4}>
+          <VStack flex={3} w="100%" py={4} spacing={4}>
             <Heading size="sm" variant="sans">
               ¡Contamos {isSingle ? 'contigo' : 'con vosotros'}!
             </Heading>
-            <Text size="sm">
-              {isSingle ? 'puedes' : 'podeis'} consultar esta tarjeta siempre{' '}
-              {isSingle ? 'que quieras informarte' : 'que querais informaros'}{' '}
-              de las novedades
+            <Text size="xs">
+              {isSingle ? 'guarda' : 'guardad'} esta tarjeta para consultar las
+              novedades
             </Text>
             <Tabs w="100%" colorScheme="blackAlpha" flex={1}>
               <TabList maxW="100%">
@@ -140,7 +139,7 @@ export const Backface = ({
               <TabPanels flex={1} h="100%">
                 {/* Contacto */}
                 <TabPanel>
-                  <VStack w="100%" alignItems="start" spacing={2}>
+                  <VStack w="100%" alignItems="start" spacing={2} h="100%">
                     <Text
                       as="a"
                       href="https://wa.link/j40ow3"
@@ -234,16 +233,19 @@ export const Backface = ({
         )}
 
         {state === States.declined && (
-          <VStack flex={2} w="100%" p={4} spacing={4} justifyContent="end">
+          <VStack flex={2} w="100%" p={4} spacing={4} justifyContent="center">
             <Heading fontWeight={600} size="sm" variant="sans">
-              ¡Sentimos mucho que no puedas venir!
+              ¡Sentimos mucho que no{' '}
+              {isSingle ? 'puedas venir' : 'podais venir'}!
             </Heading>
 
-            <Text size="sm">Pero aun puedes cambiar de opinión</Text>
+            <Text size="sm">
+              Pero aún {isSingle ? 'puedes' : 'podeis'} cambiar de opinión
+            </Text>
 
             <HStack w="100%">
               <Button variant="base" isLoading={isLoading} onClick={onClickYes}>
-                Venga, va. ¡Me apunto!
+                {isSingle ? 'Venga, va. ¡Me apunto!' : '¿Cuantos venis?'}
               </Button>
             </HStack>
           </VStack>
