@@ -1,8 +1,9 @@
 import { Guest, GuestType } from '../types'
 
-export const getGuestType = ({ isFamily, name }: Guest): GuestType => {
+export const getGuestType = ({ isFamily, name, amount }: Guest): GuestType => {
   if (isFamily) return GuestType.family
   if (!isFamily && name.length === 1) return GuestType.single
+  if (amount === 1) return GuestType.single
 
   return GuestType.couple
 }

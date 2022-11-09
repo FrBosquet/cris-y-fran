@@ -32,7 +32,7 @@ const count = (prop: keyof Guest) => (acc: number, guest: Guest) =>
 
 const Home: NextPage<Props> = ({ guests: serverGuests }) => {
   const [guests, setGuests] = useState(serverGuests)
-  const [hostFilter, setHostFilter] = useState<string>('Cris Tena')
+  const [hostFilter, setHostFilter] = useState<string>('')
   const [nameFilter, setNameFilter] = useState('')
   const [filter, setFilter] = useState<null | States>(null)
   const { replace } = useRouter()
