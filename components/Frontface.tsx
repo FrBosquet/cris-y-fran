@@ -75,7 +75,7 @@ export const Frontface = ({ guest, isFlipped, onClick }: Props) => {
 
       <Box
         position="absolute"
-        top="50vh"
+        top="60vh"
         animation={`${clickAnim} 0.3s alternate infinite`}
       >
         <Box animation={`${fadeAnim} 5s linear 1`}>
