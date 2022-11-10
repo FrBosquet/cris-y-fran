@@ -26,7 +26,7 @@ type Props = {
 }
 
 const Home: NextPage<Props> = ({ guest }) => {
-  const { name, isFamily } = guest
+  const { name, isFamily, slug } = guest
 
   const [isLoading, loading] = useBoolean(false)
   const [isFlipped, flipped] = useBoolean(false)
@@ -64,11 +64,27 @@ const Home: NextPage<Props> = ({ guest }) => {
     loading.off()
   }
 
+  const pageTitle = `${name.join(',')} ${
+    isSingle ? 'te invitamos' : 'os invitamos'
+  } a nuestra boda`
+
   return (
     <Box bg="green.100">
       <Head>
         <title>Boda de Cris y Fran</title>
-        <meta name="description" content="Invitacion a nuestra boda" />
+        <meta name="description" content={pageTitle} />
+        <meta property="og:locale" content="es_ES" />
+        <meta property="og:type" content="profile" />
+        <meta property="og:title" content="¡Nos casamos!" />
+        <meta property="og:description" content={pageTitle} />
+        <meta
+          property="og:url"
+          content={`https://cris-y-fran.vercel.app/${slug}`}
+        />
+        <meta
+          property="og:image"
+          content="https://cris-y-fran.vercel.app/nosotros.png"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Center h="100vh" sx={{ perspective: '1600px' }}>
