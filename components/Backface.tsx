@@ -123,6 +123,9 @@ export const Backface = ({
             <Tabs w="100%" colorScheme="blackAlpha" flex={1}>
               <TabList maxW="100%">
                 <Tab color="black">
+                  {isMobile ? <Icon as={MdCancel} /> : 'Asistencia'}
+                </Tab>
+                <Tab color="black">
                   {isMobile ? <Icon as={MdMessage} /> : 'Contacto'}
                 </Tab>
                 <Tab color="black">
@@ -131,12 +134,31 @@ export const Backface = ({
                 <Tab color="black">
                   {isMobile ? <Icon as={IoIosGift} /> : 'Regalo'}
                 </Tab>
-                <Tab color="black">
-                  {isMobile ? <Icon as={MdCancel} /> : 'Asistencia'}
-                </Tab>
               </TabList>
 
               <TabPanels flex={1} h="100%">
+                {/* Asistencia */}
+                <TabPanel h="100%">
+                  <VStack w="100%" alignItems="start" justifyContent="end">
+                    <Text variant="soft" size="xs">
+                      {isSingle
+                        ? 'Si te ha surgido algo y no vas a poder venir, te agradeceremos que nos lo hagas saber por aquí.'
+                        : 'Si os ha surgido algo y no vais a poder venir, os agradeceremos que nos lo hagais saber por aquí'}
+                      . Podemos cambiar el numero de invitados sin coste hasta
+                      el 24 de Mayo de 2023.
+                    </Text>
+                    <HStack w="100%">
+                      <Button
+                        variant="base"
+                        isLoading={isLoading}
+                        onClick={onClickNo}
+                      >
+                        {isSingle ? 'No voy a poder ir' : 'No vamos a poder ir'}
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </TabPanel>
+
                 {/* Contacto */}
                 <TabPanel>
                   <VStack w="100%" alignItems="start" spacing={2} h="100%">
@@ -203,27 +225,6 @@ export const Backface = ({
                     >
                       <CopyIcon mr={2} /> ES43 1465 0100 94 2055346756
                     </Text>
-                  </VStack>
-                </TabPanel>
-
-                <TabPanel h="100%">
-                  <VStack w="100%" alignItems="start" justifyContent="end">
-                    <Text variant="soft" size="xs">
-                      {isSingle
-                        ? 'Si te ha surgido algo y no vas a poder venir, te agradeceremos que nos lo hagas saber por aquí.'
-                        : 'Si os ha surgido algo y no vais a poder venir, os agradeceremos que nos lo hagais saber por aquí'}
-                      . Podemos cambiar el numero de invitados sin coste hasta
-                      el 24 de Mayo de 2023.
-                    </Text>
-                    <HStack w="100%">
-                      <Button
-                        variant="base"
-                        isLoading={isLoading}
-                        onClick={onClickNo}
-                      >
-                        {isSingle ? 'No voy a poder ir' : 'No vamos a poder ir'}
-                      </Button>
-                    </HStack>
                   </VStack>
                 </TabPanel>
               </TabPanels>
