@@ -1,4 +1,6 @@
-import { Heading, VStack } from '@chakra-ui/react'
+import { Box, Heading, keyframes, VStack } from '@chakra-ui/react'
+import Image from 'next/image'
+import click from 'public/click.png'
 import bg from 'public/paper.webp'
 import { Card } from '../components/Card'
 import { getGuestTypes } from '../lib/guesttype'
@@ -49,6 +51,17 @@ const FamilyCover = ({ guest: { name } }: CoverProps) => {
 export const Frontface = ({ guest, isFlipped, onClick }: Props) => {
   const { isSingle, isFamily, isCouple } = getGuestTypes(guest)
 
+  const clickAnim = keyframes`
+    from { transform: scale(1); }
+    to { transform: scale(1.2); }
+  `
+
+  const fadeAnim = keyframes`
+    from { opacity: 0; }
+    80% { opacity: 0; }
+    100% { opacity: 1; }
+  `
+
   return (
     <Card
       bg={bg}
@@ -59,6 +72,16 @@ export const Frontface = ({ guest, isFlipped, onClick }: Props) => {
       {isSingle && <SingleCover guest={guest} />}
       {isFamily && <FamilyCover guest={guest} />}
       {isCouple && <CoupleCover guest={guest} />}
+
+      <Box
+        position="absolute"
+        top="50vh"
+        animation={`${clickAnim} 0.3s alternate infinite`}
+      >
+        <Box animation={`${fadeAnim} 5s linear 1`}>
+          <Image src={click} width={'70%'} height={'70%'} />
+        </Box>
+      </Box>
     </Card>
   )
 }
