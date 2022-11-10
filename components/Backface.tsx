@@ -182,8 +182,7 @@ export const Backface = ({
                       {isSingle
                         ? 'Si te hemos invitado a nuestra boda es porque eres importante'
                         : 'Si os hemos invitado a nuesta boda es porque sois importantes'}{' '}
-                      para nosostros. No esperamos nada a cambio ni creemos en
-                      la costumbre de que los invitados financien nuestro día.
+                      para nosostros. No esperamos nada a cambio.
                     </Text>
                     <Text variant="soft" size="xs">
                       Si aun así {isSingle ? 'te' : 'os'} apetece tener un
