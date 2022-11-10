@@ -195,7 +195,7 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
         borderRadius="md"
         flex={1}
         bg="linear-gradient(to bottom, #333D29, #1A1A1A)"
-        overflow={'scroll'}
+        overflowY={'auto'}
       >
         {filteredList.map((guest) => {
           return (

@@ -68,7 +68,13 @@ export const GuestRow: React.FC<Props> = ({ guest, onEditSuccess }) => {
   const visibleAmount =
     state === States.accepted ? amount : state === States.declined ? 0 : '...'
   return (
-    <HStack p={2} w="100%" position="relative" alignItems="center">
+    <HStack
+      p={2}
+      w="100%"
+      position="relative"
+      alignItems="center"
+      _hover={{ bg: 'rgba(100, 100, 100, 0.25)' }}
+    >
       <Tooltip hasArrow label={stateLabels[state]}>
         <Center>
           <Icon color={stateColors[state]} as={stateIcons[state]} />

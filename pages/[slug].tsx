@@ -64,14 +64,13 @@ const Home: NextPage<Props> = ({ guest }) => {
     loading.off()
   }
 
-  const pageTitle = `${name.join(',')} ${
+  const pageTitle = `${name.join(', ')} ${
     isSingle ? 'te invitamos' : 'os invitamos'
   } a nuestra boda`
 
   return (
     <Box bg="green.100">
       <Head>
-        <title>Boda de Cris y Fran</title>
         <meta name="description" content={pageTitle} />
         <meta property="og:locale" content="es_ES" />
         <meta property="og:type" content="profile" />
