@@ -11,11 +11,12 @@ export const useHostId = () => {
   const session = useSession()
 
   const fetchHostId = useCallback(async (email: string) => {
-    loading.on()
-
     if (cache[email]) {
-      return cache[email]
+      setHostId(cache[email])
+      return
     }
+
+    loading.on()
 
     const res = await supabaseClient
       .from('hosts')
