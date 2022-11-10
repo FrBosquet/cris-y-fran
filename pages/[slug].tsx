@@ -64,7 +64,7 @@ const Home: NextPage<Props> = ({ guest }) => {
     loading.off()
   }
 
-  const pageTitle = `${name.join(', ')} ${
+  const pageTitle = `${name.join(', ')}, ${
     isSingle ? 'te invitamos' : 'os invitamos'
   } a nuestra boda`
 
