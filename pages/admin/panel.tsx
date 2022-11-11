@@ -3,12 +3,14 @@ import {
   Button,
   Heading,
   HStack,
+  Icon,
   IconButton,
   Input,
   Select,
   Spacer,
   Text,
   Tooltip,
+  useBreakpointValue,
   useToast,
   VStack,
 } from '@chakra-ui/react'
@@ -17,7 +19,7 @@ import { useSessionContext } from '@supabase/auth-helpers-react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
-import { BsSearch } from 'react-icons/bs'
+import { BsFillFilePersonFill, BsSearch } from 'react-icons/bs'
 import { AddGuest } from '../../components/AddGuest'
 import { GuestRow } from '../../components/GuestRow'
 import { getGuests } from '../../lib/supabase'
@@ -31,6 +33,11 @@ const count = (prop: keyof Guest) => (acc: number, guest: Guest) =>
   acc + Number(guest[prop])
 
 const Home: NextPage<Props> = ({ guests: serverGuests }) => {
+  const isMobile =
+    useBreakpointValue({
+      base: true,
+      sm: false,
+    }) || false
   const [guests, setGuests] = useState(serverGuests)
   const [hostFilter, setHostFilter] = useState<string>('')
   const [nameFilter, setNameFilter] = useState('')
@@ -114,38 +121,42 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
       </HStack>
 
       <HStack p={2} bg="gray.800" shadow="base" w="100%" borderRadius="md">
-        <BsSearch />
-        <Input
-          w="15ch"
-          value={nameFilter}
-          onChange={(e) => {
-            setNameFilter(e.currentTarget.value)
-          }}
-        />
+        {!isMobile && (
+          <>
+            <BsSearch />
+            <Input
+              w="15ch"
+              value={nameFilter}
+              onChange={(e) => {
+                setNameFilter(e.currentTarget.value)
+              }}
+            />
 
-        <Select
-          w="auto"
-          placeholder="Todos"
-          color={'gray'}
-          onChange={(e) => {
-            setHostFilter(e.currentTarget.value)
-          }}
-        >
-          {hosts.map((host) => (
-            <option key={host} value={host}>
-              {host}
-            </option>
-          ))}
-        </Select>
-
-        <Spacer />
+            <Select
+              w="auto"
+              placeholder="Todos"
+              color={'gray'}
+              onChange={(e) => {
+                setHostFilter(e.currentTarget.value)
+              }}
+            >
+              {hosts.map((host) => (
+                <option key={host} value={host}>
+                  {host}
+                </option>
+              ))}
+            </Select>
+            <Spacer />
+          </>
+        )}
 
         <Text fontSize="xs" color="white">
-          {guests.length} invitaciones /
+          {filteredList.length} {!isMobile && 'invitaciones'} /
         </Text>
         <Text fontSize="xs" color="white">
-          {guests.reduce((acc, guest) => acc + guest.maxAmount, 0)} invitados
+          {filteredList.reduce((acc, guest) => acc + guest.maxAmount, 0)}{' '}
         </Text>
+        {isMobile ? <Icon as={BsFillFilePersonFill} /> : 'invitados'}
 
         <Spacer />
 
@@ -203,6 +214,32 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
           )
         })}
       </VStack>
+
+      <HStack>
+        <BsSearch />
+        <Input
+          w="15ch"
+          value={nameFilter}
+          onChange={(e) => {
+            setNameFilter(e.currentTarget.value)
+          }}
+        />
+
+        <Select
+          w="auto"
+          placeholder="Todos"
+          color={'gray'}
+          onChange={(e) => {
+            setHostFilter(e.currentTarget.value)
+          }}
+        >
+          {hosts.map((host) => (
+            <option key={host} value={host}>
+              {host}
+            </option>
+          ))}
+        </Select>
+      </HStack>
     </VStack>
   )
 }

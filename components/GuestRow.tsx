@@ -88,7 +88,7 @@ export const GuestRow: React.FC<Props> = ({ guest, onEditSuccess }) => {
       <VStack alignItems="start" flex={1} spacing={0}>
         <EditGuest guest={guest} onSuccess={onEditSuccess}>
           <Tooltip label="editar invitacion">
-            <Text noOfLines={1} color="white">
+            <Text noOfLines={1} color="white" textTransform="none">
               {guest.name.join(', ')}
             </Text>
           </Tooltip>
