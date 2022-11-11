@@ -3,14 +3,12 @@ import {
   Button,
   Heading,
   HStack,
-  Icon,
   IconButton,
   Input,
   Select,
   Spacer,
   Text,
   Tooltip,
-  useBreakpointValue,
   VStack,
 } from '@chakra-ui/react'
 import { withPageAuth } from '@supabase/auth-helpers-nextjs'
@@ -24,7 +22,7 @@ import {
   useReducer,
   useState,
 } from 'react'
-import { BsFillFilePersonFill, BsSearch } from 'react-icons/bs'
+import { BsSearch } from 'react-icons/bs'
 import { AddGuest } from '../../components/AddGuest'
 import { GuestRow } from '../../components/GuestRow'
 import { FilterActions, initialState, reducer } from '../../lib/filterReducer'
@@ -38,13 +36,16 @@ type Props = {
 const count = (prop: keyof Guest) => (acc: number, guest: Guest) =>
   acc + Number(guest[prop])
 
-const Home: NextPage<Props> = ({ guests: serverGuests }) => {
-  const isMobile =
-    useBreakpointValue({
-      base: true,
-      md: false,
-    }) || false
+const onlyDesktop = {
+  base: 'none',
+  md: 'flex',
+}
+const onlyPhone = {
+  base: 'flex',
+  md: 'none',
+}
 
+const Home: NextPage<Props> = ({ guests: serverGuests }) => {
   const [filterState, dispatch] = useReducer(reducer, initialState)
   const [guests, setGuests] = useState(serverGuests)
 
@@ -137,49 +138,46 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
       </HStack>
 
       <HStack p={2} bg="gray.800" shadow="base" w="100%" borderRadius="md">
-        {!isMobile && (
-          <>
-            <BsSearch />
-            <Input
-              w="15ch"
-              value={filterState.name}
-              onChange={(e) => {
-                dispatch({
-                  type: FilterActions.setFilter,
-                  payload: { field: 'name', value: e.currentTarget.value },
-                })
-              }}
-            />
+        <HStack display={onlyDesktop}>
+          <BsSearch />
+          <Input
+            w="15ch"
+            value={filterState.name}
+            onChange={(e) => {
+              dispatch({
+                type: FilterActions.setFilter,
+                payload: { field: 'name', value: e.currentTarget.value },
+              })
+            }}
+          />
 
-            <Select
-              w="auto"
-              placeholder="Todos"
-              color={'gray'}
-              value={filterState.host}
-              onChange={(e) => {
-                dispatch({
-                  type: FilterActions.setFilter,
-                  payload: { field: 'host', value: e.currentTarget.value },
-                })
-              }}
-            >
-              {hosts.map((host) => (
-                <option key={host} value={host}>
-                  {host}
-                </option>
-              ))}
-            </Select>
-          </>
-        )}
+          <Select
+            w="auto"
+            placeholder="Todos"
+            color={'gray'}
+            value={filterState.host}
+            onChange={(e) => {
+              dispatch({
+                type: FilterActions.setFilter,
+                payload: { field: 'host', value: e.currentTarget.value },
+              })
+            }}
+          >
+            {hosts.map((host) => (
+              <option key={host} value={host}>
+                {host}
+              </option>
+            ))}
+          </Select>
+        </HStack>
 
         <Text fontSize="xs" color="white">
-          {filteredList.length} {!isMobile && 'invitaciones'} /
+          {filteredList.length} invitaciones /
         </Text>
         <Text fontSize="xs" color="white">
           {filteredList.reduce((acc, guest) => acc + guest.maxAmount, 0)}{' '}
-          {!isMobile && 'invitados'}
+          invitados
         </Text>
-        {isMobile && <Icon as={BsFillFilePersonFill} />}
 
         <Spacer />
 
@@ -251,39 +249,37 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
         })}
       </VStack>
 
-      {isMobile && (
-        <HStack>
-          <BsSearch />
-          <Input
-            w="15ch"
-            value={filterState.name}
-            onChange={(e) => {
-              dispatch({
-                type: FilterActions.setFilter,
-                payload: { field: 'name', value: e.currentTarget.value },
-              })
-            }}
-          />
+      <HStack display={onlyPhone}>
+        <BsSearch />
+        <Input
+          w="15ch"
+          value={filterState.name}
+          onChange={(e) => {
+            dispatch({
+              type: FilterActions.setFilter,
+              payload: { field: 'name', value: e.currentTarget.value },
+            })
+          }}
+        />
 
-          <Select
-            w="auto"
-            placeholder="Todos"
-            color={'gray'}
-            onChange={(e) => {
-              dispatch({
-                type: FilterActions.setFilter,
-                payload: { field: 'host', value: e.currentTarget.value },
-              })
-            }}
-          >
-            {hosts.map((host) => (
-              <option key={host} value={host}>
-                {host}
-              </option>
-            ))}
-          </Select>
-        </HStack>
-      )}
+        <Select
+          w="auto"
+          placeholder="Todos"
+          color={'gray'}
+          onChange={(e) => {
+            dispatch({
+              type: FilterActions.setFilter,
+              payload: { field: 'host', value: e.currentTarget.value },
+            })
+          }}
+        >
+          {hosts.map((host) => (
+            <option key={host} value={host}>
+              {host}
+            </option>
+          ))}
+        </Select>
+      </HStack>
     </VStack>
   )
 }
