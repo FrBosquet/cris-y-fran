@@ -11,17 +11,23 @@ import {
   Text,
   Tooltip,
   useBreakpointValue,
-  useToast,
   VStack,
 } from '@chakra-ui/react'
 import { withPageAuth } from '@supabase/auth-helpers-nextjs'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo, useState } from 'react'
+import {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react'
 import { BsFillFilePersonFill, BsSearch } from 'react-icons/bs'
 import { AddGuest } from '../../components/AddGuest'
 import { GuestRow } from '../../components/GuestRow'
+import { FilterActions, initialState, reducer } from '../../lib/filterReducer'
 import { getGuests } from '../../lib/supabase'
 import { Guest, States } from '../../types'
 
@@ -36,17 +42,14 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
   const isMobile =
     useBreakpointValue({
       base: true,
-      sm: false,
+      md: false,
     }) || false
+
+  const [filterState, dispatch] = useReducer(reducer, initialState)
   const [guests, setGuests] = useState(serverGuests)
-  const [hostFilter, setHostFilter] = useState<string>('')
-  const [nameFilter, setNameFilter] = useState('')
-  const [filter, setFilter] = useState<null | States>(null)
+
   const { replace } = useRouter()
   const { supabaseClient } = useSessionContext()
-  const toast = useToast({
-    position: 'bottom-right',
-  })
 
   const logout = useCallback(async () => {
     await supabaseClient.auth.signOut()
@@ -54,35 +57,40 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
     replace('/admin')
   }, [])
 
-  const invited = guests
-    .filter(({ state }) => state === States.pending)
-    .reduce(count('maxAmount'), 0)
-  const accepted = guests
-    .filter(({ state }) => state === States.accepted)
-    .reduce(count('amount'), 0)
-  const declined = guests
-    .filter(({ state }) => state === States.declined)
-    .reduce(count('maxAmount'), 0)
+  const invited = useMemo(
+    () =>
+      guests
+        .filter(({ state }) => state === States.pending)
+        .reduce(count('maxAmount'), 0),
+    [guests]
+  )
+  const accepted = useMemo(
+    () =>
+      guests
+        .filter(({ state }) => state === States.accepted)
+        .reduce(count('amount'), 0),
+    [guests]
+  )
+  const declined = useMemo(
+    () =>
+      guests
+        .filter(({ state }) => state === States.declined)
+        .reduce(count('maxAmount'), 0),
+    [guests]
+  )
 
   const filteredList = useMemo(() => {
     return guests
       .sort((a, b) => (a.slug > b.slug ? 1 : -1))
-      .filter(({ state }) => {
-        if (!filter) return true
+      .filter(({ state, slug, host }) => {
+        if (filterState.state && state !== filterState.state) return false
+        if (filterState.host && host.name !== filterState.host) return false
+        if (filterState.name && !slug.includes(filterState.name.toLowerCase()))
+          return false
 
-        return state === filter
+        return true
       })
-      .filter(({ slug }) => {
-        if (nameFilter.trim().length === 0) return true
-
-        return slug.includes(nameFilter)
-      })
-      .filter(({ host }) => {
-        if (hostFilter.length === 0) return true
-
-        return host.name === hostFilter
-      })
-  }, [guests, filter, nameFilter, hostFilter])
+  }, [guests, filterState])
 
   const refresh = useCallback(async () => {
     const refreshedGuests = await getGuests()
@@ -97,6 +105,14 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
       return [...acc, el.host.name]
     }, [])
   }, [guests])
+
+  useLayoutEffect(() => {
+    const ls = localStorage.getItem('adminFilter')
+    if (!ls) return
+    const adminFilter = JSON.parse(ls)
+
+    dispatch({ type: FilterActions.setFilters, payload: adminFilter })
+  }, [])
 
   return (
     <VStack h="100vh" bg="gray.1000" color="white" p={4} spacing={3}>
@@ -126,9 +142,12 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
             <BsSearch />
             <Input
               w="15ch"
-              value={nameFilter}
+              value={filterState.name}
               onChange={(e) => {
-                setNameFilter(e.currentTarget.value)
+                dispatch({
+                  type: FilterActions.setFilter,
+                  payload: { field: 'name', value: e.currentTarget.value },
+                })
               }}
             />
 
@@ -136,8 +155,12 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
               w="auto"
               placeholder="Todos"
               color={'gray'}
+              value={filterState.host}
               onChange={(e) => {
-                setHostFilter(e.currentTarget.value)
+                dispatch({
+                  type: FilterActions.setFilter,
+                  payload: { field: 'host', value: e.currentTarget.value },
+                })
               }}
             >
               {hosts.map((host) => (
@@ -146,7 +169,6 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
                 </option>
               ))}
             </Select>
-            <Spacer />
           </>
         )}
 
@@ -155,16 +177,20 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
         </Text>
         <Text fontSize="xs" color="white">
           {filteredList.reduce((acc, guest) => acc + guest.maxAmount, 0)}{' '}
+          {!isMobile && 'invitados'}
         </Text>
-        {isMobile ? <Icon as={BsFillFilePersonFill} /> : 'invitados'}
+        {isMobile && <Icon as={BsFillFilePersonFill} />}
 
         <Spacer />
 
         <Tooltip label="pendientes">
           <Button
-            variant={filter === States.pending ? 'outline' : 'solid'}
+            variant={filterState.state === States.pending ? 'outline' : 'solid'}
             onClick={() =>
-              setFilter((f) => (f === States.pending ? null : States.pending))
+              dispatch({
+                type: FilterActions.toggleFilter,
+                payload: { field: 'state', value: States.pending },
+              })
             }
             size="xs"
             colorScheme="yellow"
@@ -175,9 +201,14 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
 
         <Tooltip label="aceptados">
           <Button
-            variant={filter === States.accepted ? 'outline' : 'solid'}
+            variant={
+              filterState.state === States.accepted ? 'outline' : 'solid'
+            }
             onClick={() =>
-              setFilter((f) => (f === States.accepted ? null : States.accepted))
+              dispatch({
+                type: FilterActions.toggleFilter,
+                payload: { field: 'state', value: States.accepted },
+              })
             }
             size="xs"
             colorScheme="green"
@@ -188,9 +219,14 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
 
         <Tooltip placement="bottom-start" label="rechazados">
           <Button
-            variant={filter === States.declined ? 'outline' : 'solid'}
+            variant={
+              filterState.state === States.declined ? 'outline' : 'solid'
+            }
             onClick={() =>
-              setFilter((f) => (f === States.declined ? null : States.declined))
+              dispatch({
+                type: FilterActions.toggleFilter,
+                payload: { field: 'state', value: States.declined },
+              })
             }
             size="xs"
             colorScheme="red"
@@ -215,31 +251,39 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
         })}
       </VStack>
 
-      <HStack>
-        <BsSearch />
-        <Input
-          w="15ch"
-          value={nameFilter}
-          onChange={(e) => {
-            setNameFilter(e.currentTarget.value)
-          }}
-        />
+      {isMobile && (
+        <HStack>
+          <BsSearch />
+          <Input
+            w="15ch"
+            value={filterState.name}
+            onChange={(e) => {
+              dispatch({
+                type: FilterActions.setFilter,
+                payload: { field: 'name', value: e.currentTarget.value },
+              })
+            }}
+          />
 
-        <Select
-          w="auto"
-          placeholder="Todos"
-          color={'gray'}
-          onChange={(e) => {
-            setHostFilter(e.currentTarget.value)
-          }}
-        >
-          {hosts.map((host) => (
-            <option key={host} value={host}>
-              {host}
-            </option>
-          ))}
-        </Select>
-      </HStack>
+          <Select
+            w="auto"
+            placeholder="Todos"
+            color={'gray'}
+            onChange={(e) => {
+              dispatch({
+                type: FilterActions.setFilter,
+                payload: { field: 'host', value: e.currentTarget.value },
+              })
+            }}
+          >
+            {hosts.map((host) => (
+              <option key={host} value={host}>
+                {host}
+              </option>
+            ))}
+          </Select>
+        </HStack>
+      )}
     </VStack>
   )
 }
