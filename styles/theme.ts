@@ -84,7 +84,7 @@ const config: ThemeConfig = {
 export const theme = extendTheme({
   global: {
     'html, body': {
-      fontFamily: 'Josefin Slab',
+      fontFamily: 'Josefin Sans',
     },
   },
   colors,
