@@ -2,6 +2,7 @@
   "name": "Boda Cris y Fran",
   "short_name": "BCyF",
   "start_url": "./admin",
+  "scope": "/admin/",
   "display": "standalone",
   "icons": [
     {

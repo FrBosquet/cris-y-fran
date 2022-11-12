@@ -5,6 +5,8 @@ export default function Document() {
     <Html>
       <Head>
         <title>Boda de Cris y Fran</title>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#7F9867" />
       </Head>
       <body>
         <Main />
