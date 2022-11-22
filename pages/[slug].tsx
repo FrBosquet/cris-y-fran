@@ -84,7 +84,6 @@ const Home: NextPage<Props> = ({ guest }) => {
           property="og:image"
           content="https://cris-y-fran.vercel.app/nosotros.png"
         />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <Center h="100vh" sx={{ perspective: '1600px' }}>
         <Frontface
