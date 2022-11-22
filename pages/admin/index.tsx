@@ -7,7 +7,7 @@ import {
   HStack,
   Input,
   useToast,
-  VStack,
+  VStack
 } from '@chakra-ui/react'
 import { useSessionContext } from '@supabase/auth-helpers-react'
 import { useFormik } from 'formik'
@@ -112,7 +112,7 @@ const Home: NextPage = () => {
   return (
     <Center minH="100vh" bg="gray.1000" color="white">
       <VStack>
-        <Heading variant="panel">Acceso novios</Heading>
+        <Heading color="green.100" variant="panel">Acceso novios</Heading>
         <VStack
           as="form"
           bg="pink.50"

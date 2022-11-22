@@ -4,8 +4,10 @@ export type FilterState = {
   state: string
 }
 
+export const EMPTY_HOST = "EMPTY_HOST"
+
 export const initialState = {
-  host: '',
+  host: EMPTY_HOST,
   name: '',
   state: '',
 }

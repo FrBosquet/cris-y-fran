@@ -9,7 +9,7 @@ import {
   Spacer,
   Text,
   Tooltip,
-  VStack,
+  VStack
 } from '@chakra-ui/react'
 import { withPageAuth } from '@supabase/auth-helpers-nextjs'
 import { useSessionContext } from '@supabase/auth-helpers-react'
@@ -20,12 +20,12 @@ import {
   useLayoutEffect,
   useMemo,
   useReducer,
-  useState,
+  useState
 } from 'react'
 import { BsSearch } from 'react-icons/bs'
 import { AddGuest } from '../../components/AddGuest'
 import { GuestRow } from '../../components/GuestRow'
-import { FilterActions, initialState, reducer } from '../../lib/filterReducer'
+import { FilterActions, initialState, reducer, EMPTY_HOST } from '../../lib/filterReducer'
 import { getGuests } from '../../lib/supabase'
 import { Guest, States } from '../../types'
 
@@ -58,34 +58,12 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
     replace('/admin')
   }, [])
 
-  const invited = useMemo(
-    () =>
-      guests
-        .filter(({ state }) => state === States.pending)
-        .reduce(count('maxAmount'), 0),
-    [guests]
-  )
-  const accepted = useMemo(
-    () =>
-      guests
-        .filter(({ state }) => state === States.accepted)
-        .reduce(count('amount'), 0),
-    [guests]
-  )
-  const declined = useMemo(
-    () =>
-      guests
-        .filter(({ state }) => state === States.declined)
-        .reduce(count('maxAmount'), 0),
-    [guests]
-  )
-
   const filteredList = useMemo(() => {
     return guests
       .sort((a, b) => (a.slug > b.slug ? 1 : -1))
       .filter(({ state, slug, host }) => {
         if (filterState.state && state !== filterState.state) return false
-        if (filterState.host && host.name !== filterState.host) return false
+        if (filterState.host !== EMPTY_HOST && host.name !== filterState.host) return false
         if (filterState.name && !slug.includes(filterState.name.toLowerCase()))
           return false
 
@@ -104,7 +82,7 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
       if (acc.includes(el.host.name)) return acc
 
       return [...acc, el.host.name]
-    }, [])
+    }, [EMPTY_HOST])
   }, [guests])
 
   useLayoutEffect(() => {
@@ -114,6 +92,28 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
 
     dispatch({ type: FilterActions.setFilters, payload: adminFilter })
   }, [])
+
+  const invited = useMemo(
+    () =>
+      filteredList
+        .filter(({ state }) => state === States.pending)
+        .reduce(count('maxAmount'), 0),
+    [filteredList]
+  )
+  const accepted = useMemo(
+    () =>
+      filteredList
+        .filter(({ state }) => state === States.accepted)
+        .reduce(count('amount'), 0),
+    [filteredList]
+  )
+  const declined = useMemo(
+    () =>
+      filteredList
+        .filter(({ state }) => state === States.declined)
+        .reduce(count('maxAmount'), 0),
+    [filteredList]
+  )
 
   return (
     <VStack h="100vh" bg="gray.1000" color="white" p={4} spacing={3}>
@@ -153,7 +153,6 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
 
           <Select
             w="auto"
-            placeholder="Todos"
             color={'gray'}
             value={filterState.host}
             onChange={(e) => {
@@ -163,9 +162,9 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
               })
             }}
           >
-            {hosts.map((host) => (
+            {hosts.map((host: string) => (
               <option key={host} value={host}>
-                {host}
+                {host === EMPTY_HOST ? 'Todos' : host}
               </option>
             ))}
           </Select>
@@ -175,7 +174,7 @@ const Home: NextPage<Props> = ({ guests: serverGuests }) => {
           {filteredList.length} invitaciones /
         </Text>
         <Text fontSize="xs" color="white">
-          {filteredList.reduce((acc, guest) => acc + guest.maxAmount, 0)}{' '}
+          {filteredList.reduce((acc, guest) => acc + (guest.amount ?? guest.maxAmount), 0)}{' '}
           invitados
         </Text>
 
