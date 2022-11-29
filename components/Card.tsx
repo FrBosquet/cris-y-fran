@@ -10,13 +10,7 @@ type Props = {
   width?: string
 }
 
-export const Card = ({
-  rotation,
-  onClick,
-  bg,
-  children,
-  width = '100%',
-}: Props) => {
+export const Card = ({ rotation, onClick, bg, children }: Props) => {
   return (
     <Center
       cursor={onClick ? 'pointer' : 'unset'}

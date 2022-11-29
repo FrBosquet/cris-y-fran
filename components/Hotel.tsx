@@ -1,26 +1,25 @@
 import { ChatIcon, EmailIcon } from '@chakra-ui/icons'
 import {
+  Button,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
   useDisclosure,
+  VStack,
 } from '@chakra-ui/react'
-import { Button, Text, VStack } from '@chakra-ui/react'
 
 import {
   Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
   TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react'
 
 export const Hotel = () => {
@@ -96,7 +95,7 @@ export const Hotel = () => {
                 </Tbody>
               </Table>
             </TableContainer>
-            <Text variant="soft" size="xs">
+            <Text variant="soft" size="sm">
               *SA = Solo Alojamiento; *AD = Alojamiento y Desayuno; **Familiar =
               2 adultos y 2 niños
             </Text>
@@ -104,13 +103,18 @@ export const Hotel = () => {
               Para beneficiarte de estas tarifas, debes ponerte en contacto con
               el hotel por medio de:
             </Text>
-            <Text as="a" href="wa.link/gclkje" size="md" textAlign="left">
+            <Text
+              as="a"
+              href="https://wa.link/gclkje"
+              size="md"
+              textAlign="left"
+            >
               <ChatIcon mr={2} /> Whatsapp
             </Text>
             <Text
               textAlign="left"
               as="a"
-              href="mailto:reservas@hotelcastelloncenter.com"
+              href="mailto:reservas@hotelcastelloncenter.com?Subject=Reserva%20alojamiento%20boda%20Cris%20y%20Fran"
               size="md"
             >
               <EmailIcon mr={2} /> EMail

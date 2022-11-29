@@ -113,8 +113,15 @@ export const Backface = ({
           </VStack>
         )}
         {state === States.accepted && (
-          <VStack flex={3} w="100%" py={4} spacing={2}>
-            <Heading size="xs" variant="sans">
+          <VStack flex={3} w="100%" py={[0, 4]} spacing={2} overflow="scroll">
+            <Heading
+              size="xs"
+              variant="sans"
+              display={{
+                base: 'none',
+                sm: 'block',
+              }}
+            >
               ¡Contamos {isSingle ? 'contigo' : 'con vosotros'}!
             </Heading>
 
@@ -187,13 +194,13 @@ export const Backface = ({
                 {/* Regalo */}
                 <TabPanel>
                   <VStack w="100%" alignItems="start" spacing={[2]}>
-                    <Text variant="soft" size="xs">
+                    <Text variant="soft" size="sm">
                       {isSingle
                         ? 'Si te hemos invitado a nuestra boda es porque eres importante'
                         : 'Si os hemos invitado a nuesta boda es porque sois importantes'}{' '}
                       para nosostros. No esperamos nada a cambio.
                     </Text>
-                    <Text variant="soft" size="xs">
+                    <Text variant="soft" size="sm">
                       Si aun así {isSingle ? 'te' : 'os'} apetece tener un
                       detalle con nosotros, puedes hacerlo en este número de
                       cuenta:
