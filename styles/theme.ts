@@ -85,6 +85,7 @@ export const theme = extendTheme({
   global: {
     'html, body': {
       fontFamily: 'Josefin Sans',
+      color: 'red',
     },
   },
   colors,

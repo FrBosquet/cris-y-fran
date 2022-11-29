@@ -22,6 +22,7 @@ import { MdCancel, MdHotel, MdMessage } from 'react-icons/md'
 import { Card } from '../components/Card'
 import { getGuestTypes } from '../lib/guesttype'
 import { Guest, States } from '../types'
+import { Hotel } from './Hotel'
 
 type Props = {
   isLoading: boolean
@@ -51,7 +52,7 @@ export const Backface = ({
   return (
     <Card bg={bgi} rotation={isFlipped ? 0 : 180}>
       <VStack p={['2rem', '4rem']} w="100%" h="100%">
-        <Center w="100%" borderBottom={line} flex={1.2}>
+        <Center w="100%" borderBottom={line} flex={1.2} maxH={'20%'}>
           <Image src={signature} />
         </Center>
         <Center
@@ -112,14 +113,11 @@ export const Backface = ({
           </VStack>
         )}
         {state === States.accepted && (
-          <VStack flex={3} w="100%" py={4} spacing={4}>
-            <Heading size="sm" variant="sans">
+          <VStack flex={3} w="100%" py={4} spacing={2}>
+            <Heading size="xs" variant="sans">
               ¡Contamos {isSingle ? 'contigo' : 'con vosotros'}!
             </Heading>
-            <Text size="xs">
-              {isSingle ? 'guarda' : 'guardad'} esta tarjeta para consultar las
-              novedades
-            </Text>
+
             <Tabs w="100%" colorScheme="blackAlpha" flex={1}>
               <TabList maxW="100%">
                 <Tab color="black">
@@ -183,18 +181,7 @@ export const Backface = ({
 
                 {/* Alojamiento */}
                 <TabPanel>
-                  <VStack w="100%" alignItems="start" spacing={[2]}>
-                    <Text variant="soft" size="xs">
-                      Mas dels doblons no cuenta con habitaciones. La finca se
-                      encuentra en Almazora, a apenas 15 minutos de Castellón.
-                      Dispondremos de autobuses para ir y volver.
-                    </Text>
-                    <Text variant="soft" size="xs">
-                      Estamos negociando con varios establecimientos para
-                      facilitaros encontrar una habitación de hotel. Podrás
-                      consultarlos aquí tan pronto como los tengamos disponibles
-                    </Text>
-                  </VStack>
+                  <Hotel />
                 </TabPanel>
 
                 {/* Regalo */}
