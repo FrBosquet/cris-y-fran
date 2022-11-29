@@ -54,7 +54,7 @@ export const Backface = ({
 
   useEffect(() => {
     if (isFlipped) {
-      setTimeout(() => setScrollable('scroll'), 300)
+      setTimeout(() => setScrollable('scroll'), 1000)
     }
   }, [isFlipped])
 
