@@ -17,6 +17,7 @@ import {
 import Image from 'next/image'
 import signature from 'public/cyf negro.png'
 import bgi from 'public/paper.webp'
+import { useEffect, useState } from 'react'
 import { IoIosGift } from 'react-icons/io'
 import { MdCancel, MdHotel, MdMessage } from 'react-icons/md'
 import { Card } from '../components/Card'
@@ -41,6 +42,8 @@ export const Backface = ({
   onClickYes,
   onClickNo,
 }: Props) => {
+  const [scrollable, setScrollable] = useState('hidden')
+
   const isMobile =
     useBreakpointValue({
       base: true,
@@ -48,6 +51,12 @@ export const Backface = ({
     }) || false
   const { isSingle } = getGuestTypes(guest)
   const { state } = guest
+
+  useEffect(() => {
+    if (isFlipped) {
+      setTimeout(() => setScrollable('scroll'), 300)
+    }
+  }, [isFlipped])
 
   return (
     <Card bg={bgi} rotation={isFlipped ? 0 : 180}>
@@ -113,7 +122,13 @@ export const Backface = ({
           </VStack>
         )}
         {state === States.accepted && (
-          <VStack flex={3} w="100%" py={[0, 4]} spacing={2} overflow="scroll">
+          <VStack
+            flex={3}
+            w="100%"
+            py={[0, 4]}
+            spacing={2}
+            overflow={scrollable}
+          >
             <Heading
               size="xs"
               variant="sans"
