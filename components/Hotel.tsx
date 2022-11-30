@@ -49,8 +49,7 @@ export const Hotel = () => {
             </Text>
             <Text variant="soft" textAlign="left">
               Hemos negociado unas condiciones ventajosas con la gerencia del
-              establecimiento para que os alojeis en el. Las tarifas acordadas <strong>por noche</strong>
-              son:
+              establecimiento para que os alojeis en el. Las tarifas acordadas <strong>por noche</strong> son:
             </Text>
             <TableContainer>
               <Table variant="simple">
