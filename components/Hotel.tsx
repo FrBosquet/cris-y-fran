@@ -9,7 +9,7 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
-  VStack,
+  VStack
 } from '@chakra-ui/react'
 
 import {
@@ -19,7 +19,7 @@ import {
   Td,
   Th,
   Thead,
-  Tr,
+  Tr
 } from '@chakra-ui/react'
 
 export const Hotel = () => {
@@ -96,8 +96,10 @@ export const Hotel = () => {
               </Table>
             </TableContainer>
             <Text variant="soft" size="sm">
-              *SA = Solo Alojamiento; *AD = Alojamiento y Desayuno; **Familiar =
-              2 adultos y 2 niños
+              *SA = Solo Alojamiento;<br />
+              *AD = Alojamiento y Desayuno;<br />
+              **Familiar = 2 adultos y 2 niños<br />
+              Niños menores de 2 años sin cargo
             </Text>
             <Text variant="soft" textAlign="left">
               Para beneficiarte de estas tarifas, debes ponerte en contacto con
@@ -120,7 +122,7 @@ export const Hotel = () => {
               <EmailIcon mr={2} /> EMail
             </Text>
             <Text variant="soft" textAlign="left">
-              Indicando que vas de parte de <strong>Cris y Fran</strong>. Las
+              Indicando el código <strong>Boda Cris y Fran</strong>. Las
               reservas no tienen penalización por cancelación hasta el 1 de mayo
               de 2023. Tras esa fecha, se convertiran en no reembolsables. Los
               precios ofertados y su disponibilidad (Hasta 40 habitaciones) se
