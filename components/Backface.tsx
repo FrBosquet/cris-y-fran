@@ -102,7 +102,7 @@ export const Backface = ({
             </Text>
             <Text size="sm">Camí vora rambla s/n, Almassora, Castellón</Text>
             <Text size="sm" fontWeight={600}>
-              Hora por determinar
+              Mediodía
             </Text>
           </VStack>
         </HStack>
