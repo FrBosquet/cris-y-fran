@@ -8,8 +8,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useDisclosure,
-  VStack
+  VStack,
+  useDisclosure
 } from '@chakra-ui/react'
 
 import {
@@ -28,9 +28,9 @@ export const Hotel = () => {
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w="calc(100vw - 2rem)" pb={4}>
-          <ModalHeader>Alojamiento</ModalHeader>
-          <ModalCloseButton />
+        <ModalContent w="calc(100vw - 2rem)" pb={4} bg="white">
+          <ModalHeader color="black">Alojamiento</ModalHeader>
+          <ModalCloseButton color="black"/>
           <ModalBody gridGap={4} display="flex" flexDir={'column'}>
             <Text variant="soft" textAlign="left">
               El hotel Castellón Center es un hotel de cuatro estrellas afiliado

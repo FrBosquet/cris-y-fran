@@ -2,8 +2,8 @@ import { ChatIcon, CopyIcon } from '@chakra-ui/icons'
 import {
   Button,
   Center,
-  Heading,
   HStack,
+  Heading,
   Icon,
   Tab,
   TabList,
@@ -11,19 +11,21 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useBreakpointValue,
   VStack,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import Image from 'next/image'
 import signature from 'public/cyf negro.png'
 import bgi from 'public/paper.webp'
 import { useEffect, useState } from 'react'
+import { FaBus } from 'react-icons/fa'
 import { IoIosGift } from 'react-icons/io'
 import { MdCancel, MdHotel, MdMessage } from 'react-icons/md'
 import { Card } from '../components/Card'
 import { getGuestTypes } from '../lib/guesttype'
 import { Guest, States } from '../types'
 import { Hotel } from './Hotel'
+import { Transportation } from './Transportation'
 
 type Props = {
   isLoading: boolean
@@ -101,8 +103,8 @@ export const Backface = ({
               Mas dels Doblons
             </Text>
             <Text size="sm">Camí vora rambla s/n, Almassora, Castellón</Text>
-            <Text size="sm" fontWeight={600}>
-              Mediodía
+            <Text size="xl" fontWeight={600}>
+              13:30
             </Text>
           </VStack>
         </HStack>
@@ -146,13 +148,16 @@ export const Backface = ({
                   {isMobile ? <Icon as={MdCancel} /> : 'Asistencia'}
                 </Tab>
                 <Tab color="black">
-                  {isMobile ? <Icon as={MdMessage} /> : 'Contacto'}
-                </Tab>
-                <Tab color="black">
                   {isMobile ? <Icon as={MdHotel} /> : 'Alojamiento'}
                 </Tab>
                 <Tab color="black">
+                  {isMobile ? <Icon as={FaBus} /> : 'Transporte'}
+                </Tab>
+                <Tab color="black">
                   {isMobile ? <Icon as={IoIosGift} /> : 'Regalo'}
+                </Tab>
+                <Tab color="black">
+                  {isMobile ? <Icon as={MdMessage} /> : 'Contacto'}
                 </Tab>
               </TabList>
 
@@ -179,31 +184,14 @@ export const Backface = ({
                   </VStack>
                 </TabPanel>
 
-                {/* Contacto */}
-                <TabPanel>
-                  <VStack w="100%" alignItems="start" spacing={2} h="100%">
-                    <Text
-                      as="a"
-                      href="https://wa.link/j40ow3"
-                      size="md"
-                      variant="soft"
-                    >
-                      <ChatIcon mr={2} /> Whatsapp a Cris
-                    </Text>
-                    <Text
-                      as="a"
-                      href="https://wa.link/53q2hl"
-                      size="md"
-                      variant="soft"
-                    >
-                      <ChatIcon mr={2} /> Whatsapp a Fran
-                    </Text>
-                  </VStack>
-                </TabPanel>
-
                 {/* Alojamiento */}
                 <TabPanel>
                   <Hotel />
+                </TabPanel>
+
+                {/* Transporte */}
+                <TabPanel>
+                  <Transportation />
                 </TabPanel>
 
                 {/* Regalo */}
@@ -233,6 +221,28 @@ export const Backface = ({
                       variant="soft"
                     >
                       <CopyIcon mr={2} /> ES43 1465 0100 94 2055346756
+                    </Text>
+                  </VStack>
+                </TabPanel>
+
+                {/* Contacto */}
+                <TabPanel>
+                  <VStack w="100%" alignItems="start" spacing={2} h="100%">
+                    <Text
+                      as="a"
+                      href="https://wa.link/j40ow3"
+                      size="md"
+                      variant="soft"
+                    >
+                      <ChatIcon mr={2} /> Whatsapp a Cris
+                    </Text>
+                    <Text
+                      as="a"
+                      href="https://wa.link/53q2hl"
+                      size="md"
+                      variant="soft"
+                    >
+                      <ChatIcon mr={2} /> Whatsapp a Fran
                     </Text>
                   </VStack>
                 </TabPanel>

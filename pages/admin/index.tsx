@@ -145,6 +145,7 @@ const Home: NextPage = () => {
             <Button
               isLoading={isLoading || formik.isSubmitting}
               onClick={signup}
+              colorScheme='dark'
             >
               Registrar
             </Button>
