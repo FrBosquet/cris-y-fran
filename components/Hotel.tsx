@@ -138,9 +138,8 @@ export const Hotel = () => {
 
       <VStack w="100%" alignItems="start" spacing={[2]}>
         <Text variant="soft" size="sm">
-          La finca se encuentra en Almazora, a apenas 15 minutos de Castellón.
-          Dispondremos de autobuses para ir y volver. Hemos negociado con el
-          Hotel Castellon Center precios para nuestros invitados
+          Hemos negociado con el
+          Hotel Castellon Center precios para nuestros invitados. Haz click en más información para consultar las tarifas y contratar.
         </Text>
         <Button p={4} w="100%" variant="base" onClick={onOpen}>
           Más información

@@ -79,7 +79,7 @@ export const Transportation = () => {
 
       <VStack w="100%" alignItems="start" spacing={[2]}>
         <Text variant="soft" size="sm">
-          Hemos dispuesto de autobuses para faciliar el traslado desde la ciudad de Castellón de la Plana hasta la finca Mas dels Doblons.
+          La finca se encuentra en Almazora, a apenas 15 minutos de Castellón. Hemos dispuesto autobuses para faciliar el traslado desde la ciudad de Castellón de la Plana hasta la finca Mas dels Doblons.
         </Text>
         <Button p={4} w="100%" variant="base" onClick={onOpen}>
           Horarios
