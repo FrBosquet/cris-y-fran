@@ -64,11 +64,11 @@ export const Transportation = () => {
                 <Tbody>
                   <Tr>
                     <Td>Hotel Center</Td>
-                    <Td>20:00</Td>
+                    <Td>19:30</Td>
                   </Tr>
                   <Tr>
                     <Td>Hotel Center</Td>
-                    <Td>23:30</Td>
+                    <Td>23:00</Td>
                   </Tr>
                 </Tbody>
               </Table>
